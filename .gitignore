@@ -11,3 +11,5 @@
 *.db-journal
 
 .env
+.vercel
+.env

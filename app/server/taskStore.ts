@@ -1,6 +1,6 @@
 import Database from "better-sqlite3";
-import type { AppState, CompletedTask, Person } from "../types/tasks";
-import { PEOPLE } from "../data/tasks";
+import type { AppState, CompletedTask, Person, TaskRating, TaskWithRatings } from "../types/tasks";
+import { PEOPLE, TASKS } from "../data/tasks";
 
 // Initialize SQLite database
 const dbPath = process.env.DATABASE_PATH || "./data/tasks.db";
@@ -13,6 +13,25 @@ db.exec(`
     total_points INTEGER DEFAULT 0
   );
 
+  CREATE TABLE IF NOT EXISTS tasks (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    category TEXT,
+    default_points INTEGER DEFAULT 0
+  );
+
+  CREATE TABLE IF NOT EXISTS task_ratings (
+    id TEXT PRIMARY KEY,
+    task_id TEXT NOT NULL,
+    person_name TEXT NOT NULL,
+    points INTEGER NOT NULL,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (task_id) REFERENCES tasks (id),
+    FOREIGN KEY (person_name) REFERENCES people (name),
+    UNIQUE(task_id, person_name)
+  );
+
   CREATE TABLE IF NOT EXISTS completed_tasks (
     id TEXT PRIMARY KEY,
     task_id TEXT NOT NULL,
@@ -20,7 +39,8 @@ db.exec(`
     task_name TEXT NOT NULL,
     points INTEGER NOT NULL,
     completed_at TEXT NOT NULL,
-    FOREIGN KEY (person_name) REFERENCES people (name)
+    FOREIGN KEY (person_name) REFERENCES people (name),
+    FOREIGN KEY (task_id) REFERENCES tasks (id)
   );
 `);
 
@@ -34,6 +54,19 @@ if (peopleCount.count === 0) {
   );
   PEOPLE.forEach((name) => {
     insertPerson.run(name, 0);
+  });
+}
+
+// Initialize tasks if table is empty
+const tasksCount = db
+  .prepare("SELECT COUNT(*) as count FROM tasks")
+  .get() as { count: number };
+if (tasksCount.count === 0) {
+  const insertTask = db.prepare(
+    "INSERT INTO tasks (id, name, description, category, default_points) VALUES (?, ?, ?, ?, ?)"
+  );
+  TASKS.forEach((task) => {
+    insertTask.run(task.id, task.name, task.description || '', task.category || '', task.points);
   });
 }
 
@@ -54,12 +87,81 @@ export function getState(): AppState {
     Omit<CompletedTask, "completedAt"> & { completedAt: string }
   >;
 
+  // Get all tasks with their ratings
+  const tasks = getTasksWithRatings();
+
   return {
     people,
     completedTasks: completedTasks.map((task) => ({
       ...task,
       completedAt: new Date(task.completedAt),
     })),
+    tasks,
+  };
+}
+
+export function getTasksWithRatings(): TaskWithRatings[] {
+  const tasks = db
+    .prepare(`
+      SELECT id, name, description, category, default_points as defaultPoints 
+      FROM tasks
+    `)
+    .all() as Array<{
+      id: string;
+      name: string;
+      description: string;
+      category: string;
+      defaultPoints: number;
+    }>;
+
+  return tasks.map((task) => {
+    const ratings = db
+      .prepare(`
+        SELECT id, task_id as taskId, person_name as personName, points, created_at as createdAt
+        FROM task_ratings 
+        WHERE task_id = ?
+      `)
+      .all(task.id) as Array<Omit<TaskRating, 'createdAt'> & { createdAt: string }>;
+
+    const formattedRatings = ratings.map((rating) => ({
+      ...rating,
+      createdAt: new Date(rating.createdAt),
+    }));
+
+    // Calculate average points
+    const averagePoints = formattedRatings.length > 0 
+      ? Math.round(formattedRatings.reduce((sum, rating) => sum + rating.points, 0) / formattedRatings.length)
+      : task.defaultPoints;
+
+    return {
+      id: task.id,
+      name: task.name,
+      description: task.description,
+      category: task.category,
+      points: averagePoints,
+      ratings: formattedRatings,
+      averagePoints,
+    };
+  });
+}
+
+export function rateTask(taskId: string, personName: string, points: number): TaskRating {
+  const ratingId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const createdAt = new Date();
+
+  const insertOrUpdateRating = db.prepare(`
+    INSERT OR REPLACE INTO task_ratings (id, task_id, person_name, points, created_at)
+    VALUES (?, ?, ?, ?, ?)
+  `);
+
+  insertOrUpdateRating.run(ratingId, taskId, personName, points, createdAt.toISOString());
+
+  return {
+    id: ratingId,
+    taskId,
+    personName,
+    points,
+    createdAt,
   };
 }
 
@@ -107,6 +209,7 @@ export function completeTask(
 export function resetData(): void {
   const transaction = db.transaction(() => {
     db.exec("DELETE FROM completed_tasks");
+    db.exec("DELETE FROM task_ratings");
     db.exec("UPDATE people SET total_points = 0");
   });
 

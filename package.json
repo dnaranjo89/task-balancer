@@ -9,6 +9,7 @@
     "typecheck": "react-router typegen && tsc",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx migrate.ts",
+    "db:seed": "tsx seed.ts",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {

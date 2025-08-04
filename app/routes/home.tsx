@@ -76,6 +76,17 @@ export default function Home() {
 
         {/* Botones de navegación */}
         <div className="space-y-4">
+          <Link to="/tasks" className="block">
+            <Button
+              onClick={() => {}}
+              variant="primary"
+              size="large"
+              className="w-full max-w-md"
+            >
+              📋 Gestionar Tareas
+            </Button>
+          </Link>
+
           <Link to="/scoreboard" className="block">
             <Button
               onClick={() => {}}

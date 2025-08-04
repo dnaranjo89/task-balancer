@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { Button } from "../components/Button";
 import { TaskButton } from "../components/TaskButton";
 import { useTaskData } from "../hooks/useTaskData";
-import { TASKS, PEOPLE } from "../data/tasks";
+import { PEOPLE } from "../data/tasks";
 
 export function meta({ params }: Route.MetaArgs) {
   const personName = decodeURIComponent(params.personId);
@@ -74,7 +74,7 @@ export default function TaskSelection({ params }: Route.ComponentProps) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {TASKS.map((task) => (
+          {state?.tasks.map((task) => (
             <TaskButton key={task.id} task={task} personName={personName} />
           ))}
         </div>

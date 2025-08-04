@@ -1,7 +1,7 @@
 import { db, completedTasks } from "./db";
 import { desc, eq } from "drizzle-orm";
 import type { AppState, CompletedTask } from "./types/tasks";
-import { PEOPLE } from "./data/tasks";
+import { PEOPLE, TASKS } from "./data/tasks";
 
 export async function getState(): Promise<AppState> {
   try {
@@ -12,14 +12,19 @@ export async function getState(): Promise<AppState> {
       .orderBy(desc(completedTasks.completedAt));
 
     // Transform database tasks to match our CompletedTask type
-    const tasks: CompletedTask[] = dbTasks.map((task) => ({
-      id: task.id.toString(),
-      taskId: task.taskId,
-      personName: task.personId, // Using personId as personName for compatibility
-      taskName: "", // We'll need to look this up from TASKS if needed
-      points: task.points,
-      completedAt: task.completedAt,
-    }));
+    const tasks: CompletedTask[] = dbTasks.map((task) => {
+      // Find the task name from TASKS array
+      const taskInfo = TASKS.find((t) => t.id === task.taskId);
+
+      return {
+        id: task.id.toString(),
+        taskId: task.taskId,
+        personName: task.personId, // Using personId as personName for compatibility
+        taskName: taskInfo?.name || "Tarea desconocida", // Look up task name
+        points: task.points,
+        completedAt: task.completedAt,
+      };
+    });
 
     // Calculate total points for each person
     const people = PEOPLE.map((name) => {

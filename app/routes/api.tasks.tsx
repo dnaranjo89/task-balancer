@@ -1,8 +1,8 @@
 import { redirect } from "react-router";
-import { getState, completeTask, resetData } from "../taskStore";
+import { getState, completeTask, resetData } from "../server/taskStore";
 
 export async function loader() {
-  const state = await getState();
+  const state = getState();
   return Response.json(state);
 }
 

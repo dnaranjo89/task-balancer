@@ -14,19 +14,18 @@ export function PersonRatingCard({
   onSubmitRating,
 }: PersonRatingCardProps) {
   const [currentRating, setCurrentRating] = useState(
-    existingRating?.points || 0
+    existingRating?.points || 5
   );
 
   const handleSubmit = () => {
     if (currentRating >= 1 && currentRating <= 50) {
       onSubmitRating(person.name, currentRating);
-      // Reset to existing rating or 0 after submit
-      setCurrentRating(existingRating?.points || 0);
+      // No resetear el valor - mantener la selección del usuario
     }
   };
 
   const isValidRating = currentRating >= 1 && currentRating <= 50;
-  const hasChanged = currentRating !== (existingRating?.points || 0);
+  const hasChanged = currentRating !== (existingRating?.points || 5);
 
   return (
     <div className="border border-gray-200 rounded-lg p-4">

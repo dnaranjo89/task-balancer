@@ -13,6 +13,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.1",
     "@react-router/node": "^7.7.1",
     "@react-router/serve": "^7.7.1",
     "@types/pg": "^8.15.5",

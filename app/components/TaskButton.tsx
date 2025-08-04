@@ -1,4 +1,4 @@
-import { Form } from "react-router";
+import { useTaskData } from "../hooks/useTaskData";
 import type { TaskWithRatings } from "../types/tasks";
 
 interface TaskButtonProps {
@@ -7,8 +7,10 @@ interface TaskButtonProps {
 }
 
 export function TaskButton({ task, personName }: TaskButtonProps) {
+  const { fetcher } = useTaskData();
+
   return (
-    <Form method="post" action="/api/tasks" className="w-full">
+    <fetcher.Form method="post" action="/api/tasks" className="w-full">
       <input type="hidden" name="action" value="complete" />
       <input type="hidden" name="personName" value={personName} />
       <input type="hidden" name="taskId" value={task.id} />
@@ -26,7 +28,8 @@ export function TaskButton({ task, personName }: TaskButtonProps) {
           )}
           {task.ratings.length > 0 && (
             <div className="text-xs opacity-70">
-              {task.ratings.length} valoración{task.ratings.length !== 1 ? 'es' : ''}
+              {task.ratings.length} valoración
+              {task.ratings.length !== 1 ? "es" : ""}
             </div>
           )}
         </div>
@@ -37,6 +40,6 @@ export function TaskButton({ task, personName }: TaskButtonProps) {
           )}
         </div>
       </button>
-    </Form>
+    </fetcher.Form>
   );
 }

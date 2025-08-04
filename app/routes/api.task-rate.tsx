@@ -1,7 +1,13 @@
 import { redirect } from "react-router";
-import { rateTask } from "../server/taskStore";
+import { rateTask } from "../lib/taskStore";
 
-export async function action({ request, params }: { request: Request; params: { taskId: string } }) {
+export async function action({
+  request,
+  params,
+}: {
+  request: Request;
+  params: { taskId: string };
+}) {
   const formData = await request.formData();
   const personName = formData.get("personName") as string;
   const points = parseInt(formData.get("points") as string);
@@ -12,7 +18,7 @@ export async function action({ request, params }: { request: Request; params: { 
   }
 
   try {
-    const rating = rateTask(taskId, personName, points);
+    const rating = await rateTask(taskId, personName, points);
     return Response.json({ success: true, rating });
   } catch (error) {
     return Response.json({ error: "Failed to rate task" }, { status: 500 });

@@ -36,11 +36,10 @@ export function useTaskData() {
     loadData();
   }, []);
 
-  // Recargar datos cuando se complete una acción
+  // Recargar datos cuando se complete una acción (cualquier fetcher action)
   useEffect(() => {
-    if (fetcher.state === "idle" && fetcher.data) {
-      revalidator.revalidate();
-      // Recargar datos después de una acción exitosa
+    if (fetcher.state === "idle" && fetcher.data !== undefined) {
+      // Recargar datos después de cualquier acción
       const loadData = async () => {
         try {
           const response = await fetch("/api/tasks");
@@ -60,7 +59,7 @@ export function useTaskData() {
       };
       loadData();
     }
-  }, [fetcher.state, fetcher.data, revalidator]);
+  }, [fetcher.state, fetcher.data]);
 
   return {
     state,

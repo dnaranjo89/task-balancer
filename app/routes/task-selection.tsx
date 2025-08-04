@@ -1,7 +1,6 @@
 import type { Route } from "./+types/task-selection";
 import { Link } from "react-router";
-import { Button } from "../components/Button";
-import { TaskButton } from "../components/TaskButton";
+import { Button, LoadingState, ErrorState, TaskButton } from "../components";
 import { useTaskData } from "../hooks/useTaskData";
 import { PEOPLE } from "../data/tasks";
 
@@ -29,33 +28,22 @@ export default function TaskSelection({ params }: Route.ComponentProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            Cargando tareas...
-          </h1>
-        </div>
-      </div>
+      <LoadingState
+        message="Cargando tareas..."
+        gradient="from-green-50 to-emerald-100"
+      />
     );
   }
 
   if (!personName) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 p-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            Persona no encontrada
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            La persona "{personId}" no existe en el sistema.
-          </p>
-          <Link to="/">
-            <Button onClick={() => {}} variant="primary">
-              ← Volver al inicio
-            </Button>
-          </Link>
-        </div>
-      </div>
+      <ErrorState
+        title="Persona no encontrada"
+        message={`La persona "${personId}" no existe en el sistema.`}
+        buttonText="← Volver al inicio"
+        buttonLink="/"
+        gradient="from-red-50 to-red-100"
+      />
     );
   }
 

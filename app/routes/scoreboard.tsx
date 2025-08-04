@@ -1,7 +1,6 @@
 import type { Route } from "./+types/scoreboard";
 import { Link } from "react-router";
-import { Button } from "../components/Button";
-import { Scoreboard } from "../components/Scoreboard";
+import { Button, Scoreboard, LoadingState, ErrorState } from "../components";
 import { useTaskData } from "../hooks/useTaskData";
 
 export function meta({}: Route.MetaArgs) {
@@ -19,26 +18,16 @@ export default function ScoreboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            Cargando puntuaciones...
-          </h1>
-        </div>
-      </div>
+      <LoadingState
+        message="Cargando puntuaciones..."
+        gradient="from-blue-50 to-indigo-100"
+      />
     );
   }
 
   if (!state) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">Error</h1>
-          <p className="text-xl text-gray-600">
-            No se pudieron cargar los datos
-          </p>
-        </div>
-      </div>
+      <ErrorState title="Error" message="No se pudieron cargar los datos" />
     );
   }
 

@@ -9,14 +9,18 @@ dotenv.config();
 async function seedTasks() {
   console.log("Seeding tasks into database...");
   for (const task of TASKS) {
-    await db
-      .insert(tasks)
-      .values({
-        id: task.id,
-        name: task.name,
-        points: task.points,
-        category: task.category,
-      });
+    const insertData: any = {
+      id: task.id,
+      name: task.name,
+      points: task.points,
+      category: task.category,
+    };
+
+    if (task.description) {
+      insertData.description = task.description;
+    }
+
+    await db.insert(tasks).values(insertData);
     console.log(`Inserted task: ${task.name}`);
   }
   console.log("Seeding completed.");

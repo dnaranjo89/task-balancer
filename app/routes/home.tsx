@@ -1,7 +1,7 @@
 import type { Route } from "./+types/home";
 import { Link } from "react-router";
 import { useTaskData } from "../hooks/useTaskData";
-import { Button } from "../components/Button";
+import { Button } from "../components";
 import { ResetButton } from "../components/ResetButton";
 
 export function meta({}: Route.MetaArgs) {

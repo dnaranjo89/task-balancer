@@ -3,7 +3,7 @@ import { type RouteConfig, index, route } from "@react-router/dev/routes";
 export default [
   index("routes/home.tsx"),
   route("/tasks", "routes/task-list.tsx"),
-  route("/tasks/:taskId", "routes/task-detail.tsx"),
+  route("/tasks/:taskId", "routes/task-valuation.tsx"),
   route("/:personId/does", "routes/task-selection.tsx"),
   route("/scoreboard", "routes/scoreboard.tsx"),
   route("/api/tasks", "routes/api.tasks.tsx"),

@@ -4,73 +4,87 @@
 
 Your app is now ready for deployment with:
 
-- ✅ SQLite database for persistence
-- ✅ Docker containerization
-- ✅ Production-ready build
+- ✅ PostgreSQL database for persistence (Neon)
+- ✅ Serverless functions (Vercel)
+- ✅ GitHub Actions auto-deploy
 
-## 🎯 Deploy to Railway (Recommended - FREE)
+## 🎯 Deploy to Vercel + Neon (Recommended - FREE)
 
-### Step 1: Install Railway CLI
+### Step 1: Create Neon Database
+
+1. Go to [neon.tech](https://neon.tech) and sign up
+2. Create a new PostgreSQL project
+3. Copy the connection string
+
+### Step 2: Deploy to Vercel
 
 ```bash
-npm install -g @railway/cli
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy
+vercel
+
+# Add environment variable
+vercel env add DATABASE_URL
+# Paste your Neon connection string
+
+# Run database migration
+npm run db:migrate
+
+# Redeploy
+vercel --prod
 ```
 
-### Step 2: Deploy
+Your app will be live at a Vercel URL with persistent database!
 
-```bash
-# In your project directory
-railway login
-railway init
-railway up
-```
+## 🤖 GitHub Actions Auto-Deploy (Optional)
 
-Your app will be live at a Railway URL with persistent database!
+For automatic deployments on every push to main:
+
+1. See `GITHUB_ACTIONS_SETUP.md` for detailed instructions
+2. Configure GitHub Secrets with your tokens
+3. Every push to `main` = automatic deployment
 
 ## 🎯 Alternative: Deploy to Render
 
 1. **Connect GitHub**: Go to render.com and connect your GitHub repo
-2. **Choose Docker**: Select "Deploy from Docker"
+2. **Web Service**: Create a new Web Service
 3. **Configure**:
-   - Build Command: `docker build -t app .`
+   - Build Command: `npm run build`
    - Start Command: `npm run start`
-   - Port: `3000`
+   - Environment Variables: Add `DATABASE_URL`
 
-## 🎯 Alternative: Deploy to Fly.io
-
-```bash
-# Install Fly CLI
-curl -L https://fly.io/install.sh | sh
-
-# Deploy
-fly launch
-fly deploy
-```
+Note: Render free tier sleeps after 15 minutes of inactivity.
 
 ## 🔧 Local Testing
 
 Test locally before deploying:
 
 ```bash
-# Build and run with Docker
-docker build -t task-balancer .
-docker run -p 3000:3000 -v $(pwd)/data:/app/data task-balancer
+# Setup environment
+cp .env.example .env
+# Edit .env with your Neon DATABASE_URL
 
-# Or run normally
+# Run migration
+npm run db:migrate
+
+# Start development
 npm run dev
 ```
 
-## 📊 What Changed
+## 📊 What This Setup Provides
 
-1. **Database**: Switched from in-memory to SQLite
-2. **Persistence**: Data survives restarts
-3. **Docker**: Added SQLite support to container
-4. **Configuration**: Added Railway deployment config
+1. **Database**: PostgreSQL with persistent data
+2. **Performance**: Global CDN and edge functions
+3. **Auto-deploy**: GitHub Actions integration
+4. **Free hosting**: 100% free with generous limits
 
 ## 🎉 Next Steps
 
-1. Choose a platform (Railway is easiest)
-2. Deploy with the commands above
-3. Your app will have a permanent URL!
+1. Create your Neon database (free)
+2. Deploy to Vercel with the commands above
+3. Optional: Setup GitHub Actions for auto-deploy
+4. Your app will have a permanent URL with persistent data!
 
-**Estimated deployment time: 5 minutes** ⏱️
+**Estimated deployment time: 10 minutes** ⏱️

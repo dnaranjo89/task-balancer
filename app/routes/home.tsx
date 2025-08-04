@@ -1,8 +1,10 @@
 import type { Route } from "./+types/home";
 import { Link } from "react-router";
 import { useTaskData } from "../hooks/useTaskData";
-import { Button } from "../components";
+import { usePersonStats } from "../hooks/useTaskStats";
+import { Button, DataLayout } from "../components";
 import { ResetButton } from "../components/ResetButton";
+import type { AppState } from "../types/tasks";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -17,31 +19,19 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
   const { state, loading } = useTaskData();
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Task Balancer
-          </h1>
-          <p className="text-xl text-gray-600">Cargando...</p>
-        </div>
-      </div>
-    );
-  }
+  return (
+    <DataLayout
+      data={state}
+      loading={loading}
+      loadingMessage="Cargando Task Balancer..."
+    >
+      {(data) => <HomeContent state={data} />}
+    </DataLayout>
+  );
+}
 
-  if (!state) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">Error</h1>
-          <p className="text-xl text-gray-600">
-            No se pudieron cargar los datos
-          </p>
-        </div>
-      </div>
-    );
-  }
+function HomeContent({ state }: { state: AppState }) {
+  const personStats = usePersonStats(state);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 p-4">
@@ -53,7 +43,7 @@ export default function Home() {
 
         {/* Botones de personas */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          {state.people.map((person) => (
+          {personStats.map((person) => (
             <Link
               key={person.name}
               to={`/${encodeURIComponent(person.name.toLowerCase())}/does`}
@@ -68,6 +58,9 @@ export default function Home() {
                 <div>{person.name}</div>
                 <div className="text-lg opacity-80">
                   {person.totalPoints} puntos
+                </div>
+                <div className="text-sm opacity-60">
+                  {person.completedTasksCount} tareas completadas
                 </div>
               </Button>
             </Link>

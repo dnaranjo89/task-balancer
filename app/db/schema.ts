@@ -26,8 +26,19 @@ export const taskRatings = pgTable("task_ratings", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const taskPreferences = pgTable("task_preferences", {
+  id: serial("id").primaryKey(),
+  taskId: text("task_id").notNull(),
+  personName: text("person_name").notNull(),
+  preferenceLevel: integer("preference_level").notNull(), // 1-5
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export type CompletedTask = typeof completedTasks.$inferSelect;
 export type NewCompletedTask = typeof completedTasks.$inferInsert;
 export type TaskRow = typeof tasks.$inferSelect;
 export type TaskRating = typeof taskRatings.$inferSelect;
 export type NewTaskRating = typeof taskRatings.$inferInsert;
+export type TaskPreference = typeof taskPreferences.$inferSelect;
+export type NewTaskPreference = typeof taskPreferences.$inferInsert;

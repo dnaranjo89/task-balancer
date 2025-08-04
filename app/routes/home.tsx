@@ -80,6 +80,17 @@ function HomeContent({ state }: { state: AppState }) {
             </Button>
           </Link>
 
+          <Link to="/task-preferences" className="block">
+            <Button
+              onClick={() => {}}
+              variant="primary"
+              size="large"
+              className="w-full max-w-md"
+            >
+              ⚙️ Preferencias de Tareas
+            </Button>
+          </Link>
+
           <Link to="/scoreboard" className="block">
             <Button
               onClick={() => {}}

@@ -109,8 +109,7 @@ export default function TaskPreferences() {
 
   // Separate tasks into assigned and unassigned
   const unassignedTasks = state.tasks.filter(
-    (task) =>
-      !allPreferences[task.id] || allPreferences[task.id] === "indiferente"
+    (task) => !allPreferences[task.id]
   );
 
   const handleDragStart = (e: React.DragEvent, taskId: string) => {

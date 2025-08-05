@@ -1,5 +1,5 @@
 import { redirect } from "react-router";
-import { rateTask } from "../lib/taskStore";
+import { rateTask } from "../server/taskStore";
 
 export async function action({
   request,

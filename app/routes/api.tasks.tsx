@@ -1,6 +1,5 @@
 import { redirect } from "react-router";
-import type { Route } from "./+types/api.tasks";
-import { getState, completeTask, resetData } from "../lib/taskStore";
+import { getState, completeTask, resetData } from "../server/taskStore";
 
 export async function loader() {
   const state = await getState();

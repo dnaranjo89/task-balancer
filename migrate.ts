@@ -1,9 +1,10 @@
-import { migrate } from "drizzle-orm/neon-http/migrator";
-import { db } from "./app/db";
 import dotenv from "dotenv";
 
-// Load environment variables from .env file
+// Load environment variables from .env file FIRST
 dotenv.config();
+
+import { migrate } from "drizzle-orm/neon-http/migrator";
+import { db } from "./app/db";
 
 async function runMigrations() {
   console.log("Running migrations...");

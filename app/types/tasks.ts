@@ -14,9 +14,26 @@ export interface TaskRating {
   createdAt: Date;
 }
 
+export interface TaskPreference {
+  id: string;
+  taskId: string;
+  personName: string;
+  preference:
+    | "odio"
+    | "me_cuesta"
+    | "indiferente"
+    | "no_me_cuesta"
+    | "me_gusta";
+  pointsModifier: number; // +10, +5, 0, -5, -10
+  createdAt: Date;
+}
+
 export interface TaskWithRatings extends Task {
   ratings: TaskRating[];
-  averagePoints: number;
+  preferences: TaskPreference[];
+  basePoints: number; // Media de las valoraciones o 25 por defecto
+  finalPoints: number; // basePoints + suma de preferencias
+  averagePoints: number; // Para compatibilidad hacia atrás
 }
 
 export interface CompletedTask {

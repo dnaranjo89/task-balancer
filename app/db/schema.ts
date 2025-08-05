@@ -30,9 +30,9 @@ export const taskPreferences = pgTable("task_preferences", {
   id: serial("id").primaryKey(),
   taskId: text("task_id").notNull(),
   personName: text("person_name").notNull(),
-  preferenceLevel: integer("preference_level").notNull(), // 1-5
+  preference: text("preference").notNull(), // 'odio', 'me_cuesta', 'indiferente', 'no_me_cuesta', 'me_gusta'
+  pointsModifier: integer("points_modifier").notNull(), // +10, +5, 0, -5, -10
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export type CompletedTask = typeof completedTasks.$inferSelect;

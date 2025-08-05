@@ -2,19 +2,15 @@ import type { Route } from "./+types/task-selection";
 import { Link } from "react-router";
 import { Button, LoadingState, ErrorState, TaskButton } from "../components";
 import { useTaskData } from "../hooks/useTaskData";
-import { PEOPLE } from "../data/tasks";
 
 export function meta({ params }: Route.MetaArgs) {
   const personName = decodeURIComponent(params.personId);
-  const person = PEOPLE.find(
-    (p) => p.toLowerCase() === personName.toLowerCase()
-  );
 
   return [
-    { title: `Tareas para ${person || personName} - Task Balancer` },
+    { title: `Tareas para ${personName} - Task Balancer` },
     {
       name: "description",
-      content: `Selecciona una tarea para ${person || personName}`,
+      content: `Selecciona una tarea para ${personName}`,
     },
   ];
 }
@@ -22,9 +18,9 @@ export function meta({ params }: Route.MetaArgs) {
 export default function TaskSelection({ params }: Route.ComponentProps) {
   const { state, loading } = useTaskData();
   const personId = params.personId;
-  const personName = PEOPLE.find(
-    (p) => p.toLowerCase() === personId.toLowerCase()
-  );
+  const personName =
+    state?.people.find((p) => p.name.toLowerCase() === personId.toLowerCase())
+      ?.name || decodeURIComponent(personId);
 
   if (loading) {
     return (

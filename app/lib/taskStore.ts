@@ -8,7 +8,9 @@ import type {
   TaskWithRatings,
   TaskRating,
 } from "../types/tasks";
-import { PEOPLE, TASKS } from "../data/tasks";
+
+// Hard-coded people list (could be moved to env variables or DB in the future)
+const PEOPLE = ["Alba", "David"];
 
 export async function getState(): Promise<AppState> {
   // Get all tasks with their ratings

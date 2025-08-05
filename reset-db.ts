@@ -1,9 +1,43 @@
 import { createNeonClient } from "./app/db";
+import * as fs from "fs";
+import * as path from "path";
+import { fileURLToPath } from "url";
+
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function resetDatabase() {
   const sql = createNeonClient();
 
   try {
+    console.log("🗑️  Cleaning up old migration files...");
+
+    // Remove old drizzle migration files
+    const drizzlePath = path.join(__dirname, "drizzle");
+    const metaPath = path.join(drizzlePath, "meta");
+    if (fs.existsSync(drizzlePath)) {
+      // Remove .sql files
+      const sqlFiles = fs
+        .readdirSync(drizzlePath)
+        .filter((f) => f.endsWith(".sql"));
+      sqlFiles.forEach((file) => {
+        fs.unlinkSync(path.join(drizzlePath, file));
+        console.log(`  - Removed ${file}`);
+      });
+
+      // Remove meta files
+      if (fs.existsSync(metaPath)) {
+        const metaFiles = fs.readdirSync(metaPath);
+        metaFiles.forEach((file) => {
+          fs.unlinkSync(path.join(metaPath, file));
+          console.log(`  - Removed meta/${file}`);
+        });
+      }
+    }
+
+    console.log("✅ Migration files cleaned up");
+
     console.log("🗑️  Dropping all existing tables...");
 
     // Drop all tables in correct order (respecting foreign keys)
@@ -136,6 +170,7 @@ async function resetDatabase() {
 
     console.log("🎉 Database reset completed successfully!");
     console.log("📋 Summary:");
+    console.log("  - Old migration files cleaned up");
     console.log("  - All old tables dropped");
     console.log("  - Fresh schema created with new task_preferences structure");
     console.log(`  - ${initialTasks.length} initial tasks seeded`);

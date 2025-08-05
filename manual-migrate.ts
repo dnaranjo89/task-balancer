@@ -1,17 +1,8 @@
-import dotenv from "dotenv";
-import { neon } from "@neondatabase/serverless";
+import { createNeonClient } from "./app/db";
 import * as fs from "fs";
 
-// Load environment variables
-dotenv.config();
-
 async function runManualMigration() {
-  const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) {
-    throw new Error("DATABASE_URL environment variable is required");
-  }
-
-  const sql = neon(databaseUrl);
+  const sql = createNeonClient();
 
   // Read the manual migration file
   const migrationSQL = fs.readFileSync("./drizzle/0004_manual_fix.sql", "utf8");

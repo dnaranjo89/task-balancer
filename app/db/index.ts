@@ -6,17 +6,27 @@ import * as schema from "./schema";
 // Load environment variables
 dotenv.config();
 
-// Get the database URL from environment variables
-const databaseUrl = process.env.DATABASE_URL;
-
-if (!databaseUrl) {
-  throw new Error("DATABASE_URL environment variable is required");
+// Centralized function to get database URL and validate it
+export function getDatabaseUrl(): string {
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) {
+    throw new Error("DATABASE_URL environment variable is required");
+  }
+  return databaseUrl;
 }
 
-// Create Neon HTTP client for serverless environments
-const sql = neon(databaseUrl);
+// Create Neon SQL client
+export function createNeonClient() {
+  return neon(getDatabaseUrl());
+}
 
-// Create the Drizzle database instance
-export const db = drizzle(sql, { schema });
+// Create Drizzle database instance
+export function createDatabase() {
+  const sql = createNeonClient();
+  return drizzle(sql, { schema });
+}
+
+// Default database instance for app usage
+export const db = createDatabase();
 
 export * from "./schema";

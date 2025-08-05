@@ -1,16 +1,7 @@
-import dotenv from "dotenv";
-import { neon } from "@neondatabase/serverless";
-
-// Load environment variables
-dotenv.config();
+import { createNeonClient } from "./app/db";
 
 async function resetDatabase() {
-  const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) {
-    throw new Error("DATABASE_URL environment variable is required");
-  }
-
-  const sql = neon(databaseUrl);
+  const sql = createNeonClient();
 
   try {
     console.log("🗑️  Dropping all existing tables...");

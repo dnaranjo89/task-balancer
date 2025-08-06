@@ -222,7 +222,6 @@ export default function TaskPreferences() {
             <DraggableTask
               task={state.tasks.find((t) => t.id === activeId)!}
               // isDragging={false}
-              isMobile={false}
             />
           </div>
         ) : null}

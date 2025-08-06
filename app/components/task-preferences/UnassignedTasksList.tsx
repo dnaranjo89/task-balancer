@@ -22,6 +22,7 @@ export function UnassignedTasksList({
         Tareas por Clasificar ({tasks.length})
       </h3>
 
+      {/* Mobile: Horizontal scroll layout */}
       <div className="md:hidden">
         <div className="flex gap-3 overflow-x-auto pb-2">
           {tasks.map((task) => (
@@ -33,16 +34,14 @@ export function UnassignedTasksList({
       </div>
 
       {/* Desktop: Grid layout */}
-      <div className="hidden md:block">
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-          {tasks.map((task) => (
-            <DraggableTask
-              key={task.id}
-              task={task}
-              isDragging={activeId === task.id}
-            />
-          ))}
-        </div>
+      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+        {tasks.map((task) => (
+          <DraggableTask
+            key={task.id}
+            task={task}
+            isDragging={activeId === task.id}
+          />
+        ))}
       </div>
     </div>
   );

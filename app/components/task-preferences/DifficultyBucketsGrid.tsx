@@ -17,28 +17,14 @@ export function DifficultyBucketsGrid({
         Niveles de Dificultad
       </h3>
 
-      {/* Mobile: Single column, larger touch targets */}
-      <div className="md:hidden space-y-4">
+      {/* Responsive grid: single column on mobile, multi-column on desktop */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {DIFFICULTY_BUCKETS.map((bucket) => (
           <DroppableBucket
             key={bucket.value}
             bucket={bucket}
             tasks={getTasksByBucket(bucket.value)}
             draggedTask={draggedTask}
-            isMobile={true}
-          />
-        ))}
-      </div>
-
-      {/* Desktop: Grid layout */}
-      <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {DIFFICULTY_BUCKETS.map((bucket) => (
-          <DroppableBucket
-            key={bucket.value}
-            bucket={bucket}
-            tasks={getTasksByBucket(bucket.value)}
-            draggedTask={draggedTask}
-            isMobile={false}
           />
         ))}
       </div>

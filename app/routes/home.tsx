@@ -5,6 +5,9 @@ import { usePersonStats } from "../hooks/useTaskStats";
 import { Button, DataLayout } from "../components";
 import { ResetButton } from "../components/ResetButton";
 import type { AppState } from "../types/tasks";
+import DropableDemo, {
+  DroppableStory,
+} from "~/components/task-preferences/DropableDemo";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -79,6 +82,8 @@ function HomeContent({ state }: { state: AppState }) {
               📋 Gestionar Tareas
             </Button>
           </Link>
+
+          {/* <DroppableStory containers={["A", "B", "C"]} /> */}
 
           <Link to="/task-preferences" className="block">
             <Button

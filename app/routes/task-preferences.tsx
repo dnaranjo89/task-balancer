@@ -19,7 +19,6 @@ import {
   PersonSelector,
   Instructions,
 } from "../components/task-preferences";
-
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Preferencias de Tareas - Task Balancer" },

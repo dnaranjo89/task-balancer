@@ -1,18 +1,23 @@
 import type { Route } from "./+types/task-preferences";
-import type { DragStartEvent, DragEndEvent } from "@dnd-kit/core";
 import { Link, useFetcher } from "react-router";
 import { Button } from "../components/Button";
 import { useTaskData } from "../hooks/useTaskData";
 import { useState, useCallback } from "react";
 import { PEOPLE } from "../data/tasks";
-import { DndContext, DragOverlay } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragOverlay,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  TouchSensor,
+} from "@dnd-kit/core";
 import {
   DraggableTask,
   UnassignedTasksList,
   DifficultyBucketsGrid,
   PersonSelector,
   Instructions,
-  useDragAndDrop,
 } from "../components/task-preferences";
 
 export function meta({}: Route.MetaArgs) {
@@ -30,25 +35,47 @@ export default function TaskPreferences() {
   const fetcher = useFetcher();
   const [selectedPerson, setSelectedPerson] = useState<string>(PEOPLE[0]);
   const [preferences, setPreferences] = useState<Record<string, string>>({});
-  const [draggedTask, setDraggedTask] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
 
-  // Custom hook for drag and drop logic
-  const {
-    sensors,
-    unassignedTasks,
-    getTasksByBucket,
-    handleDragStart,
-    handleDragEnd,
-    handleDragCancel,
-  } = useDragAndDrop({
-    tasks: state?.tasks,
-    selectedPerson,
-    preferences,
-    setPreferences,
-    setActiveId,
-    setDraggedTask,
-  });
+  // Simple sensors configuration
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 3 },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 50, tolerance: 5 },
+    })
+  );
+
+  // Get current preferences for selected person
+  const currentPreferences =
+    state?.tasks.reduce(
+      (acc, task) => {
+        const userPref = task.preferences.find(
+          (p) => p.personName === selectedPerson
+        );
+        if (userPref) {
+          acc[task.id] = userPref.preference;
+        }
+        return acc;
+      },
+      {} as Record<string, string>
+    ) ?? {};
+
+  // Combine current and temporary preferences
+  const allPreferences = { ...currentPreferences, ...preferences };
+
+  // Get unassigned tasks
+  const unassignedTasks =
+    state?.tasks.filter((task) => !allPreferences[task.id]) ?? [];
+
+  // Get tasks by bucket
+  const getTasksByBucket = (bucketValue: string) => {
+    return (
+      state?.tasks.filter((task) => allPreferences[task.id] === bucketValue) ??
+      []
+    );
+  };
 
   const handleSubmit = useCallback(() => {
     const formData = new FormData();
@@ -92,10 +119,28 @@ export default function TaskPreferences() {
 
   return (
     <DndContext
-      sensors={sensors}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      onDragCancel={handleDragCancel}
+      //       collisionDetection={collisionDetection}
+      //   modifiers={parent === null ? undefined : modifiers}
+      //   onDragStart={() => setIsDragging(true)}
+      //   onDragEnd={({over}) => {
+      //     setParent(over ? over.id : null);
+      //     setIsDragging(false);
+      //   }}
+      //   onDragCancel={() => setIsDragging(false)}
+      // >
+
+      // sensors={sensors}
+      onDragStart={({ active }) => setActiveId(active.id as string)}
+      onDragEnd={({ active, over }) => {
+        if (over && active.id !== over.id) {
+          setPreferences((prev) => ({
+            ...prev,
+            [active.id as string]: over.id as string,
+          }));
+        }
+        setActiveId(null);
+      }}
+      onDragCancel={() => setActiveId(null)}
     >
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 p-4">
         <div className="max-w-7xl mx-auto">
@@ -129,7 +174,7 @@ export default function TaskPreferences() {
             {/* Difficulty Buckets */}
             <DifficultyBucketsGrid
               getTasksByBucket={getTasksByBucket}
-              draggedTask={draggedTask}
+              draggedTask={activeId}
             />
 
             {/* All Tasks Classified Message - Only show when no unassigned tasks */}
@@ -177,7 +222,7 @@ export default function TaskPreferences() {
           <div className="transform rotate-3 scale-105 shadow-2xl">
             <DraggableTask
               task={state.tasks.find((t) => t.id === activeId)!}
-              isDragging={false}
+              // isDragging={false}
               isMobile={false}
             />
           </div>

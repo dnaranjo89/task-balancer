@@ -30,7 +30,7 @@ export function DraggableTask({
         style={style}
         {...listeners}
         {...attributes}
-        onDragStart={handleDragStart}
+        // onDragStart={handleDragStart}
         className={`p-4 border-2 border-dashed border-gray-300 rounded-lg cursor-move transition-all touch-manipulation select-none ${
           isDragging
             ? "opacity-30"
@@ -66,7 +66,8 @@ export function DraggableTask({
       {...attributes}
       onDragStart={handleDragStart}
       className={`p-3 border-2 border-dashed border-gray-300 rounded-lg cursor-move transition-all hover:border-blue-400 hover:bg-blue-50 ${
-        isDragging ? "opacity-30" : ""
+        // TODO the problem is here
+        isDragging ? "opacity-0" : ""
       }`}
     >
       <div className="font-semibold text-gray-800 text-sm">{task.name}</div>

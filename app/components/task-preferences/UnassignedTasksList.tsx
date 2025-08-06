@@ -22,13 +22,15 @@ export function UnassignedTasksList({
         Tareas por Clasificar ({tasks.length})
       </h3>
 
-      {/* Mobile: Horizontal scroll layout */}
+      {/* Mobile: Vertical grid layout (no horizontal scroll) */}
       <div className="md:hidden">
-        <div className="flex gap-3 overflow-x-auto pb-2">
+        <div className="grid grid-cols-1 gap-3">
           {tasks.map((task) => (
-            <div key={task.id} className="flex-shrink-0 w-52">
-              <DraggableTask task={task} isDragging={activeId === task.id} />
-            </div>
+            <DraggableTask
+              key={task.id}
+              task={task}
+              isDragging={activeId === task.id}
+            />
           ))}
         </div>
       </div>

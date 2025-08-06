@@ -18,7 +18,8 @@ export function DroppableBucket({
         draggedTask
           ? "ring-4 ring-yellow-300 ring-opacity-70 scale-105 shadow-2xl"
           : "shadow-lg hover:shadow-xl"
-      } ${isOver ? "ring-4 ring-white ring-opacity-50" : ""}`}
+      } ${isOver ? "ring-4 ring-white ring-opacity-50 scale-110" : ""}`}
+      style={{ touchAction: "none" }}
     >
       {/* Mobile layout (default) */}
       <div className="md:hidden">

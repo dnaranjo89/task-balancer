@@ -11,6 +11,7 @@ import {
   useSensors,
   PointerSensor,
   TouchSensor,
+  closestCenter,
 } from "@dnd-kit/core";
 import {
   DraggableTask,
@@ -36,13 +37,16 @@ export default function TaskPreferences() {
   const [preferences, setPreferences] = useState<Record<string, string>>({});
   const [activeId, setActiveId] = useState<string | null>(null);
 
-  // Simple sensors configuration
+  // Optimized sensors for mobile scroll compatibility
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { distance: 3 },
+      activationConstraint: { distance: 8 },
     }),
     useSensor(TouchSensor, {
-      activationConstraint: { delay: 50, tolerance: 5 },
+      activationConstraint: {
+        delay: 300,
+        tolerance: 10,
+      },
     })
   );
 
@@ -118,17 +122,8 @@ export default function TaskPreferences() {
 
   return (
     <DndContext
-      //       collisionDetection={collisionDetection}
-      //   modifiers={parent === null ? undefined : modifiers}
-      //   onDragStart={() => setIsDragging(true)}
-      //   onDragEnd={({over}) => {
-      //     setParent(over ? over.id : null);
-      //     setIsDragging(false);
-      //   }}
-      //   onDragCancel={() => setIsDragging(false)}
-      // >
-
-      // sensors={sensors}
+      sensors={sensors}
+      collisionDetection={closestCenter}
       onDragStart={({ active }) => setActiveId(active.id as string)}
       onDragEnd={({ active, over }) => {
         if (over && active.id !== over.id) {

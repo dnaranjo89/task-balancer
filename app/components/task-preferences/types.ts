@@ -9,15 +9,6 @@ export interface DifficultyBucket {
   description: string;
 }
 
-export interface DragAndDropProps {
-  tasks?: TaskWithRatings[];
-  selectedPerson: string;
-  preferences: Record<string, string>;
-  setPreferences: (preferences: Record<string, string>) => void;
-  setActiveId: (id: string | null) => void;
-  setDraggedTask: (task: string | null) => void;
-}
-
 export interface DraggableTaskProps {
   task: TaskWithRatings;
   isDragging?: boolean;

@@ -37,6 +37,8 @@ export async function action({ request }: { request: Request }) {
         Object.keys(preferences).length
       );
 
+      let lastTaskId = null;
+
       // Set preferences for each task
       for (const [taskId, preference] of Object.entries(preferences)) {
         if (preference) {
@@ -52,12 +54,19 @@ export async function action({ request }: { request: Request }) {
               | "me_gusta"
           );
           console.log(`Saved preference for task ${taskId}: ${preference}`);
+          lastTaskId = taskId;
         }
       }
 
-      return new Response(JSON.stringify({ success: true }), {
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          success: true,
+          taskId: lastTaskId,
+        }),
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     } catch (error) {
       console.error("Error parsing preferences or setting them:", error);
       return new Response(

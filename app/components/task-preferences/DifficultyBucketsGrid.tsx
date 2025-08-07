@@ -3,14 +3,20 @@ import { DIFFICULTY_BUCKETS } from "./constants";
 import type { TaskWithRatings } from "../../types/tasks";
 
 interface DifficultyBucketsGridProps {
-  getTasksByBucket: (bucketValue: string) => TaskWithRatings[];
+  tasks: TaskWithRatings[];
+  preferences: Record<string, string>;
   draggedTask: string | null;
 }
 
 export function DifficultyBucketsGrid({
-  getTasksByBucket,
+  tasks,
+  preferences,
   draggedTask,
 }: DifficultyBucketsGridProps) {
+  // Function to get tasks for a specific bucket
+  const getTasksByBucket = (bucketValue: string) => {
+    return tasks.filter((task) => preferences[task.id] === bucketValue);
+  };
   return (
     <div>
       <h3 className="text-xl font-bold text-gray-800 mb-4">

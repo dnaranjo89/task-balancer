@@ -72,7 +72,8 @@ function HomeContent({ state }: { state: AppState }) {
 
         {/* Botones de navegación */}
         <div className="space-y-4">
-          <Link to="/tasks" className="block">
+          {/* temporary hide this option   */}
+          {/* <Link to="/tasks" className="block">
             <Button
               onClick={() => {}}
               variant="primary"
@@ -81,7 +82,7 @@ function HomeContent({ state }: { state: AppState }) {
             >
               📋 Gestionar Tareas
             </Button>
-          </Link>
+          </Link> */}
 
           {/* <DroppableStory containers={["A", "B", "C"]} /> */}
 

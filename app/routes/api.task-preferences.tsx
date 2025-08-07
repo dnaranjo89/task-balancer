@@ -14,21 +14,29 @@ export async function action({ request }: { request: Request }) {
     
     if (!personName || !preferencesJson) {
       console.log("Missing fields for multiple preferences:", { personName, preferencesJson });
-      return new Response("Missing required fields", { status: 400 });
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Faltan datos requeridos" 
+      }), { 
+        status: 400,
+        headers: { "Content-Type": "application/json" }
+      });
     }
 
     try {
       const preferences = JSON.parse(preferencesJson) as Record<string, string>;
       console.log("Parsed preferences:", preferences);
+      console.log("Number of preferences to save:", Object.keys(preferences).length);
       
       // Set preferences for each task
       for (const [taskId, preference] of Object.entries(preferences)) {
-        if (preference && preference !== 'indiferente') { // Only save non-default preferences
+        if (preference) { // Save all valid preferences, including 'indiferente'
           await setTaskPreference(
             taskId, 
             personName, 
             preference as 'odio' | 'me_cuesta' | 'indiferente' | 'no_me_cuesta' | 'me_gusta'
           );
+          console.log(`Saved preference for task ${taskId}: ${preference}`);
         }
       }
       
@@ -37,7 +45,13 @@ export async function action({ request }: { request: Request }) {
       });
     } catch (error) {
       console.error("Error parsing preferences or setting them:", error);
-      return new Response("Error processing preferences", { status: 500 });
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: "Error al procesar las preferencias" 
+      }), { 
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      });
     }
   }
 
@@ -53,7 +67,13 @@ export async function action({ request }: { request: Request }) {
 
   if (!taskId || !personName || !preference) {
     console.log("Missing fields for single preference:", { taskId, personName, preference });
-    return new Response("Missing required fields", { status: 400 });
+    return new Response(JSON.stringify({ 
+      success: false, 
+      error: "Faltan datos requeridos" 
+    }), { 
+      status: 400,
+      headers: { "Content-Type": "application/json" }
+    });
   }
 
   try {
@@ -61,6 +81,12 @@ export async function action({ request }: { request: Request }) {
     return redirect("/task-preferences");
   } catch (error) {
     console.error("Error setting task preference:", error);
-    return new Response("Error setting preference", { status: 500 });
+    return new Response(JSON.stringify({ 
+      success: false, 
+      error: "Error al guardar la preferencia" 
+    }), { 
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
   }
 }

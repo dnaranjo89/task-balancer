@@ -1,4 +1,5 @@
 import { useDroppable } from "@dnd-kit/core";
+import { DraggableTaskInBucket } from "./DraggableTaskInBucket";
 import type { DroppableBucketProps } from "./types";
 
 export function DroppableBucket({
@@ -63,15 +64,11 @@ export function DroppableBucket({
       {tasks.length > 0 && (
         <div className="space-y-2">
           {tasks.map((task) => (
-            <div
+            <DraggableTaskInBucket
               key={task.id}
-              className="bg-white bg-opacity-95 text-gray-800 rounded text-sm flex justify-between items-center shadow-sm p-3 md:p-2"
-            >
-              <div className="font-semibold">{task.name}</div>
-              <div className="text-xs opacity-75 bg-gray-100 px-2 py-1 rounded">
-                {task.basePoints} → {task.finalPoints} pts
-              </div>
-            </div>
+              task={task}
+              isDragging={draggedTask === task.id}
+            />
           ))}
         </div>
       )}

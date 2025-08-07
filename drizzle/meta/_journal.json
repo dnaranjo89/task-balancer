@@ -8,6 +8,13 @@
       "when": 1754424962039,
       "tag": "0000_condemned_switch",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1754550928962,
+      "tag": "0001_parallel_grandmaster",
+      "breakpoints": true
     }
   ]
 }

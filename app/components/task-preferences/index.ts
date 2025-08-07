@@ -1,4 +1,5 @@
 export { DraggableTask } from "./DraggableTask";
+export { DraggableTaskInBucket } from "./DraggableTaskInBucket";
 export { DroppableBucket } from "./DroppableBucket";
 export { UnassignedTasksList } from "./UnassignedTasksList";
 export { DifficultyBucketsGrid } from "./DifficultyBucketsGrid";

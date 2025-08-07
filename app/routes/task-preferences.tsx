@@ -2,8 +2,10 @@ import type { Route } from "./+types/task-preferences";
 import { Link, useFetcher } from "react-router";
 import { Button } from "../components/Button";
 import { useTaskData } from "../hooks/useTaskData";
-import { useState, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { PEOPLE } from "../data/tasks";
+import { useToast } from "../hooks/useToast";
+import { ToastContainer } from "../components";
 import {
   DndContext,
   DragOverlay,
@@ -33,6 +35,7 @@ export function meta({}: Route.MetaArgs) {
 export default function TaskPreferences() {
   const { state, loading } = useTaskData();
   const fetcher = useFetcher();
+  const { toasts, showSuccess, showError, removeToast } = useToast();
   const [selectedPerson, setSelectedPerson] = useState<string>(PEOPLE[0]);
   const [preferences, setPreferences] = useState<Record<string, string>>({});
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -80,19 +83,25 @@ export default function TaskPreferences() {
     );
   };
 
-  const handleSubmit = useCallback(() => {
-    const formData = new FormData();
-    formData.append("action", "set_multiple_preferences");
-    formData.append("personName", selectedPerson);
-    formData.append("preferences", JSON.stringify(preferences));
-
-    fetcher.submit(formData, {
-      method: "post",
-      action: "/api/task-preferences",
-    });
-
-    setPreferences({});
-  }, [selectedPerson, preferences, fetcher]);
+  // Handle fetcher response (success or error)
+  useEffect(() => {
+    if (fetcher.state === "idle") {
+      if (fetcher.data?.success) {
+        showSuccess("Preferencia guardada correctamente");
+      } else if (fetcher.data !== undefined) {
+        // Handle error response from server
+        const errorMessage = fetcher.data?.error || "Error al guardar la preferencia";
+        showError(errorMessage);
+        console.error("Error saving preference:", fetcher.data);
+      }
+    }
+    
+    // Handle network/submission errors
+    if (fetcher.state === "idle" && fetcher.data === undefined && preferences && Object.keys(preferences).length > 0) {
+      // This might indicate a network error or other submission problem
+      showError("Error de conexión. Intenta de nuevo.");
+    }
+  }, [fetcher.state, fetcher.data, showSuccess, showError, preferences]);
 
   // All hooks must be called before any conditional returns
   if (loading) {
@@ -127,10 +136,30 @@ export default function TaskPreferences() {
       onDragStart={({ active }) => setActiveId(active.id as string)}
       onDragEnd={({ active, over }) => {
         if (over && active.id !== over.id) {
+          // Update local state immediately for UI responsiveness
           setPreferences((prev) => ({
             ...prev,
             [active.id as string]: over.id as string,
           }));
+
+          // Save to database immediately
+          const formData = new FormData();
+          formData.append("action", "set_multiple_preferences");
+          formData.append("personName", selectedPerson);
+          formData.append("preferences", JSON.stringify({
+            [active.id as string]: over.id as string,
+          }));
+
+          console.log("Auto-saving preference:", {
+            taskId: active.id,
+            preference: over.id,
+            person: selectedPerson
+          });
+
+          fetcher.submit(formData, {
+            method: "post",
+            action: "/api/task-preferences",
+          });
         }
         setActiveId(null);
       }}
@@ -184,31 +213,11 @@ export default function TaskPreferences() {
               </div>
             )}
           </div>
-
-          {/* Save Button */}
-          {Object.keys(preferences).length > 0 && (
-            <div className="mt-6 text-center">
-              <Button
-                onClick={handleSubmit}
-                variant="primary"
-                size="large"
-                disabled={fetcher.state === "submitting"}
-              >
-                {fetcher.state === "submitting"
-                  ? "Guardando..."
-                  : `Guardar Preferencias de ${selectedPerson}`}
-              </Button>
-            </div>
-          )}
-
-          {/* Success Message */}
-          {fetcher.data?.success && (
-            <div className="mt-4 p-4 bg-green-100 border border-green-300 rounded-lg text-green-800 text-center">
-              ✅ Preferencias guardadas correctamente
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Toast notifications */}
+      <ToastContainer toasts={toasts} onRemoveToast={removeToast} />
 
       {/* Drag Overlay */}
       <DragOverlay dropAnimation={null}>

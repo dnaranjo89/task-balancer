@@ -39,9 +39,11 @@ export function useTaskData() {
   // Recargar datos cuando se complete una acción (cualquier fetcher action)
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data !== undefined) {
+      console.log("Fetcher completed with data:", fetcher.data);
       // Recargar datos después de cualquier acción
       const loadData = async () => {
         try {
+          console.log("Reloading data after fetcher action...");
           const response = await fetch("/api/tasks");
           if (response.ok) {
             const serverState = await response.json();
@@ -51,6 +53,7 @@ export function useTaskData() {
                 completedAt: new Date(task.completedAt),
               })
             );
+            console.log("Data reloaded successfully");
             setState(serverState);
           }
         } catch (error) {

@@ -1,4 +1,11 @@
-import { pgTable, text, timestamp, integer, serial, unique } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  integer,
+  serial,
+  unique,
+} from "drizzle-orm/pg-core";
 
 export const completedTasks = pgTable("completed_tasks", {
   id: serial("id").primaryKey(),
@@ -18,26 +25,34 @@ export const tasks = pgTable("tasks", {
 });
 
 // Table for task ratings
-export const taskRatings = pgTable("task_ratings", {
-  id: serial("id").primaryKey(),
-  taskId: text("task_id").notNull(),
-  personName: text("person_name").notNull(),
-  points: integer("points").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-}, (table) => ({
-  unq: unique().on(table.taskId, table.personName),
-}));
+export const taskRatings = pgTable(
+  "task_ratings",
+  {
+    id: serial("id").primaryKey(),
+    taskId: text("task_id").notNull(),
+    personName: text("person_name").notNull(),
+    points: integer("points").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    unq: unique().on(table.taskId, table.personName),
+  })
+);
 
-export const taskPreferences = pgTable("task_preferences", {
-  id: serial("id").primaryKey(),
-  taskId: text("task_id").notNull(),
-  personName: text("person_name").notNull(),
-  preference: text("preference").notNull(), // 'odio', 'me_cuesta', 'indiferente', 'no_me_cuesta', 'me_gusta'
-  pointsModifier: integer("points_modifier").notNull(), // +10, +5, 0, -5, -10
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-}, (table) => ({
-  unq: unique().on(table.taskId, table.personName),
-}));
+export const taskPreferences = pgTable(
+  "task_preferences",
+  {
+    id: serial("id").primaryKey(),
+    taskId: text("task_id").notNull(),
+    personName: text("person_name").notNull(),
+    preference: text("preference").notNull(), // 'odio', 'me_cuesta', 'indiferente', 'no_me_cuesta', 'me_gusta'
+    pointsModifier: integer("points_modifier").notNull(), // +10, +5, 0, -5, -10
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    unq: unique().on(table.taskId, table.personName),
+  })
+);
 
 export type CompletedTask = typeof completedTasks.$inferSelect;
 export type NewCompletedTask = typeof completedTasks.$inferInsert;

@@ -5,12 +5,14 @@ export function Instructions() {
       <div className="text-blue-700 space-y-2">
         <p className="md:hidden">
           <strong>En móvil:</strong> Mantén presionada una tarea y arrástrala
-          hacia el nivel de dificultad correspondiente. La preferencia se guarda automáticamente.
+          hacia el nivel de dificultad correspondiente. La preferencia se guarda
+          automáticamente.
         </p>
         <p className="hidden md:block">
-          Arrastra las tareas hacia el bucket que mejor describa qué tan difícil te resulta cada una. 
-          Las tareas más difíciles obtendrán más puntos, las más fáciles menos puntos. 
-          Las preferencias se guardan automáticamente al soltar cada tarea.
+          Arrastra las tareas hacia el bucket que mejor describa qué tan difícil
+          te resulta cada una. Las tareas más difíciles obtendrán más puntos,
+          las más fáciles menos puntos. Las preferencias se guardan
+          automáticamente al soltar cada tarea.
         </p>
       </div>
     </div>

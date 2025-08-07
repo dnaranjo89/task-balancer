@@ -3,9 +3,9 @@ import { sql } from "drizzle-orm";
 
 async function migrate() {
   const db = createDatabase();
-  
+
   console.log("Adding unique constraints to database...");
-  
+
   try {
     // Add unique constraint to task_ratings if it doesn't exist
     await db.execute(sql`
@@ -21,7 +21,7 @@ async function migrate() {
         END IF;
       END $$;
     `);
-    
+
     // Add unique constraint to task_preferences if it doesn't exist
     await db.execute(sql`
       DO $$ 
@@ -36,7 +36,7 @@ async function migrate() {
         END IF;
       END $$;
     `);
-    
+
     console.log("✅ Migration completed successfully!");
   } catch (error) {
     console.error("❌ Migration failed:", error);

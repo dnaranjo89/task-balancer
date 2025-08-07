@@ -12,7 +12,7 @@ export function DraggableTaskInBucket({
 
   const style = {
     transform: CSS.Translate.toString(transform),
-    touchAction: 'none', // Prevent scrolling when touching this element
+    touchAction: "none", // Prevent scrolling when touching this element
   };
 
   // Create a transparent drag image to hide the browser's default drag preview

@@ -21,14 +21,14 @@ export function Toast({ message, type, onClose, duration = 3000 }: ToastProps) {
 
   const bgColor = {
     success: "bg-green-500",
-    error: "bg-red-500", 
-    info: "bg-blue-500"
+    error: "bg-red-500",
+    info: "bg-blue-500",
   }[type];
 
   const icon = {
     success: "✅",
     error: "❌",
-    info: "ℹ️"
+    info: "ℹ️",
   }[type];
 
   return (

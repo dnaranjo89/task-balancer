@@ -90,14 +90,20 @@ export default function TaskPreferences() {
         showSuccess("Preferencia guardada correctamente");
       } else if (fetcher.data !== undefined) {
         // Handle error response from server
-        const errorMessage = fetcher.data?.error || "Error al guardar la preferencia";
+        const errorMessage =
+          fetcher.data?.error || "Error al guardar la preferencia";
         showError(errorMessage);
         console.error("Error saving preference:", fetcher.data);
       }
     }
-    
+
     // Handle network/submission errors
-    if (fetcher.state === "idle" && fetcher.data === undefined && preferences && Object.keys(preferences).length > 0) {
+    if (
+      fetcher.state === "idle" &&
+      fetcher.data === undefined &&
+      preferences &&
+      Object.keys(preferences).length > 0
+    ) {
       // This might indicate a network error or other submission problem
       showError("Error de conexión. Intenta de nuevo.");
     }
@@ -146,14 +152,17 @@ export default function TaskPreferences() {
           const formData = new FormData();
           formData.append("action", "set_multiple_preferences");
           formData.append("personName", selectedPerson);
-          formData.append("preferences", JSON.stringify({
-            [active.id as string]: over.id as string,
-          }));
+          formData.append(
+            "preferences",
+            JSON.stringify({
+              [active.id as string]: over.id as string,
+            })
+          );
 
           console.log("Auto-saving preference:", {
             taskId: active.id,
             preference: over.id,
-            person: selectedPerson
+            person: selectedPerson,
           });
 
           fetcher.submit(formData, {

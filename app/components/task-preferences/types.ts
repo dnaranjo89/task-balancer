@@ -12,6 +12,7 @@ export interface DifficultyBucket {
 export interface DraggableTaskProps {
   task: TaskWithRatings;
   isDragging?: boolean;
+  isInOverlay?: boolean;
 }
 
 export interface DroppableBucketProps {

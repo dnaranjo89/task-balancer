@@ -5,6 +5,7 @@ import type { DraggableTaskProps } from "./types";
 export function DraggableTask({
   task,
   isDragging = false,
+  isInOverlay = false,
 }: DraggableTaskProps) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task.id,
@@ -31,9 +32,9 @@ export function DraggableTask({
       {...attributes}
       onDragStart={handleDragStart}
       className={`
-        p-4 md:p-3 border-2 border-dashed border-gray-300 rounded-lg 
-        cursor-move transition-all 
-        hover:border-blue-400 hover:bg-blue-50 
+        p-4 md:p-3 ${isInOverlay ? '' : 'border-2 border-dashed border-gray-300'} rounded-lg 
+        cursor-move transition-all bg-white
+        ${!isInOverlay ? 'hover:border-blue-400 hover:bg-blue-50' : ''} 
         touch-manipulation select-none
         min-h-[100px] md:min-h-[auto]
         active:scale-105

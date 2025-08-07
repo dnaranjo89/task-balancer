@@ -233,8 +233,11 @@ export default function TaskPreferences() {
       {/* Drag Overlay */}
       <DragOverlay dropAnimation={null}>
         {activeId ? (
-          <div className="transform rotate-3 scale-105 shadow-2xl">
-            <DraggableTask task={state.tasks.find((t) => t.id === activeId)!} />
+          <div className="transform rotate-3 scale-105 shadow-2xl bg-white rounded-lg border-2 border-blue-500">
+            <DraggableTask 
+              task={state.tasks.find((t) => t.id === activeId)!} 
+              isInOverlay={true}
+            />
           </div>
         ) : null}
       </DragOverlay>

@@ -36,7 +36,7 @@ export function DraggableTaskInBucket({
         p-3 md:p-2 cursor-move transition-all 
         hover:bg-opacity-100 hover:shadow-md
         touch-manipulation select-none
-        ${isDragging ? "opacity-50 scale-105 shadow-lg border border-blue-500 z-10" : ""}
+        ${isDragging ? "opacity-0 scale-105 shadow-lg border border-blue-500 z-10" : ""}
       `}
     >
       <div className="font-semibold">{task.name}</div>

@@ -1,5 +1,5 @@
 {
-  "id": "8bbb6fe0-8d6c-4f75-a1e9-1ced83e34259",
+  "id": "da1c247f-6f24-48a3-a156-611066605369",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -38,6 +38,13 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "extra_points": {
+          "name": "extra_points",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         }
       },
       "indexes": {},
@@ -93,7 +100,16 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "task_preferences_task_id_person_name_unique": {
+          "name": "task_preferences_task_id_person_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "task_id",
+            "person_name"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -137,7 +153,16 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "task_ratings_task_id_person_name_unique": {
+          "name": "task_ratings_task_id_person_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "task_id",
+            "person_name"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

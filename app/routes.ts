@@ -10,4 +10,5 @@ export default [
   route("/api/tasks", "routes/api.tasks.tsx"),
   route("/api/tasks/:taskId/rate", "routes/api.task-rate.tsx"),
   route("/api/task-preferences", "routes/api.task-preferences.tsx"),
+  route("/api/extra-points", "routes/api.extra-points.tsx"),
 ] satisfies RouteConfig;

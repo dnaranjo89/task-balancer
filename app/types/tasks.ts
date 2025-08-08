@@ -42,6 +42,7 @@ export interface CompletedTask {
   personName: string;
   taskName: string;
   points: number;
+  extraPoints: number;
   completedAt: Date;
 }
 

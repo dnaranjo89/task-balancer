@@ -1,11 +1,13 @@
 import type { Person, CompletedTask } from "../types/tasks";
+import { ExtraPointsControl } from "./ExtraPointsControl";
 
 interface ScoreboardProps {
   people: Person[];
   completedTasks: CompletedTask[];
+  onExtraPointsUpdate?: () => void;
 }
 
-export function Scoreboard({ people, completedTasks }: ScoreboardProps) {
+export function Scoreboard({ people, completedTasks, onExtraPointsUpdate }: ScoreboardProps) {
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat("es-ES", {
       day: "2-digit",
@@ -60,7 +62,24 @@ export function Scoreboard({ people, completedTasks }: ScoreboardProps) {
                     {task.personName} • {formatDate(task.completedAt)}
                   </div>
                 </div>
-                <div className="text-green-600 font-bold">+{task.points}</div>
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <div className="text-green-600 font-bold">
+                      +{task.points + task.extraPoints}
+                    </div>
+                    {task.extraPoints !== 0 && (
+                      <div className={`text-xs ${
+                        task.extraPoints > 0 ? "text-green-600" : "text-red-600"
+                      }`}>
+                        ({task.points} base {task.extraPoints > 0 ? "+" : ""}{task.extraPoints})
+                      </div>
+                    )}
+                  </div>
+                  <ExtraPointsControl 
+                    completedTask={task} 
+                    onSuccess={onExtraPointsUpdate}
+                  />
+                </div>
               </div>
             ))}
           </div>

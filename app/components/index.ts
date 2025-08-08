@@ -4,6 +4,7 @@ export { Button } from "./Button";
 export { TaskButton } from "./TaskButton";
 export { PersonRatingCard } from "./PersonRatingCard";
 export { Scoreboard } from "./Scoreboard";
+export { ExtraPointsControl } from "./ExtraPointsControl";
 export { AppLayout } from "./layouts/AppLayout";
 export { DataLayout } from "./layouts/DataLayout";
 export { TaskGrid } from "./tasks/TaskGrid";

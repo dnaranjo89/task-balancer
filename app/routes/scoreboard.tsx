@@ -14,7 +14,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function ScoreboardPage() {
-  const { state, loading } = useTaskData();
+  const { state, loading, refetch } = useTaskData();
 
   if (loading) {
     return (
@@ -45,6 +45,7 @@ export default function ScoreboardPage() {
         <Scoreboard
           people={state.people}
           completedTasks={state.completedTasks}
+          onExtraPointsUpdate={refetch}
         />
       </div>
     </div>

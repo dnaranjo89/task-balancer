@@ -13,6 +13,7 @@ export const completedTasks = pgTable("completed_tasks", {
   personId: text("person_id").notNull(),
   completedAt: timestamp("completed_at").defaultNow().notNull(),
   points: integer("points").notNull(),
+  extraPoints: integer("extra_points").default(0).notNull(),
 });
 
 // Table for predefined tasks with names, points, description and category

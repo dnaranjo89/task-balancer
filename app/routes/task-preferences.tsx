@@ -38,8 +38,9 @@ export async function action({ request }: Route.ActionArgs) {
   const personName = formData.get("personName") as string;
   const taskId = formData.get("taskId") as string;
   const preference = formData.get("preference") as string;
+  const action = formData.get("action") as string;
 
-  if (!personName || !taskId || !preference) {
+  if (!personName || !taskId) {
     return {
       success: false,
       error: "Faltan datos requeridos",
@@ -47,26 +48,46 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   try {
-    await setTaskPreference(
-      taskId,
-      personName,
-      preference as
-        | "odio"
-        | "me_cuesta"
-        | "indiferente"
-        | "no_me_cuesta"
-        | "me_gusta"
-    );
+    if (action === "remove_preference") {
+      // Eliminar preferencia (desclasificar tarea)
+      // Aquí necesitarías una función para eliminar la preferencia
+      // Por ahora, guardaremos como "indiferente" que es neutral
+      await setTaskPreference(taskId, personName, "indiferente");
 
-    return {
-      success: true,
-      message: "Preferencia guardada correctamente",
-    };
+      return {
+        success: true,
+        message: "Tarea desclasificada",
+      };
+    } else {
+      // Guardar preferencia normal
+      if (!preference) {
+        return {
+          success: false,
+          error: "Falta la preferencia",
+        };
+      }
+
+      await setTaskPreference(
+        taskId,
+        personName,
+        preference as
+          | "odio"
+          | "me_cuesta"
+          | "indiferente"
+          | "no_me_cuesta"
+          | "me_gusta"
+      );
+
+      return {
+        success: true,
+        message: "Preferencia guardada correctamente",
+      };
+    }
   } catch (error) {
-    console.error("Error saving preference:", error);
+    console.error("Error processing preference:", error);
     return {
       success: false,
-      error: "Error al guardar la preferencia",
+      error: "Error al procesar la preferencia",
     };
   }
 }
@@ -155,21 +176,40 @@ export default function TaskPreferences() {
       onDragStart={({ active }) => setActiveId(active.id as string)}
       onDragEnd={({ active, over }) => {
         if (over && active.id !== over.id) {
-          // Update local state immediately for UI responsiveness
-          setPreferences((prev) => ({
-            ...prev,
-            [active.id as string]: over.id as string,
-          }));
+          if (over.id === "unassigned") {
+            // Manejar caso especial: desclasificar tarea
+            setPreferences((prev) => {
+              const newPrefs = { ...prev };
+              delete newPrefs[active.id as string];
+              return newPrefs;
+            });
 
-          // Save to database using the route's action
-          fetcher.submit(
-            {
-              personName: selectedPerson,
-              taskId: active.id as string,
-              preference: over.id as string,
-            },
-            { method: "post" }
-          );
+            // Enviar solicitud para eliminar preferencia
+            fetcher.submit(
+              {
+                personName: selectedPerson,
+                taskId: active.id as string,
+                action: "remove_preference",
+              },
+              { method: "post" }
+            );
+          } else {
+            // Caso normal: guardar preferencia
+            setPreferences((prev) => ({
+              ...prev,
+              [active.id as string]: over.id as string,
+            }));
+
+            // Save to database using the route's action
+            fetcher.submit(
+              {
+                personName: selectedPerson,
+                taskId: active.id as string,
+                preference: over.id as string,
+              },
+              { method: "post" }
+            );
+          }
         }
         setActiveId(null);
       }}
@@ -234,8 +274,8 @@ export default function TaskPreferences() {
       <DragOverlay dropAnimation={null}>
         {activeId ? (
           <div className="transform rotate-3 scale-105 shadow-2xl bg-white rounded-lg border-2 border-blue-500">
-            <DraggableTask 
-              task={state.tasks.find((t) => t.id === activeId)!} 
+            <DraggableTask
+              task={state.tasks.find((t) => t.id === activeId)!}
               isInOverlay={true}
             />
           </div>

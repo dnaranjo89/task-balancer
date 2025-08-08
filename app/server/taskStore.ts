@@ -44,12 +44,12 @@ export async function getState(): Promise<AppState> {
     .from(completedTasks)
     .orderBy(desc(completedTasks.completedAt));
 
-  // Calculate total points per person
+  // Calculate total points per person (including extra points)
   const peopleMap = new Map(peopleNames.map((p) => [p.name, p.totalPoints]));
   completedTasksData.forEach((task) => {
     peopleMap.set(
       task.personId,
-      (peopleMap.get(task.personId) || 0) + task.points
+      (peopleMap.get(task.personId) || 0) + task.points + (task.extraPoints || 0)
     );
   });
 
@@ -71,6 +71,7 @@ export async function getState(): Promise<AppState> {
       taskName:
         tasksData.find((t) => t.id === task.taskId)?.name || "Unknown Task",
       points: task.points,
+      extraPoints: task.extraPoints || 0,
       completedAt: task.completedAt,
     })
   );
@@ -255,6 +256,7 @@ export async function completeTask(
     personName: result[0].personId,
     taskName,
     points: result[0].points,
+    extraPoints: result[0].extraPoints || 0,
     completedAt: result[0].completedAt,
   };
 }

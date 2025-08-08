@@ -1,2 +1,0 @@
-ALTER TABLE "task_preferences" ADD CONSTRAINT "task_preferences_task_id_person_name_unique" UNIQUE("task_id","person_name");--> statement-breakpoint
-ALTER TABLE "task_ratings" ADD CONSTRAINT "task_ratings_task_id_person_name_unique" UNIQUE("task_id","person_name");

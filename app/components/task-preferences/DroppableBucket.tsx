@@ -5,22 +5,31 @@ import type { DroppableBucketProps } from "./types";
 export function DroppableBucket({
   bucket,
   tasks,
-  isOver = false,
   draggedTask,
 }: DroppableBucketProps) {
-  const { setNodeRef } = useDroppable({
+  const { setNodeRef, isOver } = useDroppable({
     id: bucket.value,
   });
 
   return (
     <div
       ref={setNodeRef}
-      className={`${bucket.color} text-white rounded-xl p-4 transition-all min-h-[140px] md:min-h-[250px] ${
+      className={`${bucket.color} text-white rounded-xl p-4 transition-all duration-300 min-h-[140px] md:min-h-[250px] ${
         draggedTask
-          ? "ring-4 ring-yellow-300 ring-opacity-70 scale-105 shadow-2xl"
+          ? "ring-4 ring-yellow-300 ring-opacity-70 shadow-2xl"
           : "shadow-lg hover:shadow-xl"
-      } ${isOver ? "ring-4 ring-white ring-opacity-50 scale-110" : ""}`}
-      style={{ touchAction: "none" }}
+      } ${
+        isOver
+          ? "ring-8 ring-white shadow-2xl !bg-white !bg-opacity-40 backdrop-blur-sm"
+          : ""
+      }`}
+      style={{
+        touchAction: "none",
+        ...(isOver && {
+          boxShadow:
+            "0 0 0 4px rgba(255, 255, 255, 0.6), 0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+        }),
+      }}
     >
       {/* Mobile layout (default) */}
       <div className="md:hidden">

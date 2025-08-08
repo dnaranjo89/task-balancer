@@ -10,29 +10,34 @@ export function useTaskData() {
   const [state, setState] = useState<AppState | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const loadData = async () => {
+    try {
+      const response = await fetch("/api/tasks");
+      if (response.ok) {
+        const serverState = await response.json();
+        // Convertir fechas de string a Date
+        serverState.completedTasks = serverState.completedTasks.map(
+          (task: any) => ({
+            ...task,
+            completedAt: new Date(task.completedAt),
+          })
+        );
+        setState(serverState);
+      }
+    } catch (error) {
+      console.error("Error loading data from server:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función para refetch manual
+  const refetch = async () => {
+    await loadData();
+  };
+
   // Cargar datos del servidor al inicializar
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await fetch("/api/tasks");
-        if (response.ok) {
-          const serverState = await response.json();
-          // Convertir fechas de string a Date
-          serverState.completedTasks = serverState.completedTasks.map(
-            (task: any) => ({
-              ...task,
-              completedAt: new Date(task.completedAt),
-            })
-          );
-          setState(serverState);
-        }
-      } catch (error) {
-        console.error("Error loading data from server:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadData();
   }, []);
 
@@ -41,26 +46,7 @@ export function useTaskData() {
     if (fetcher.state === "idle" && fetcher.data !== undefined) {
       console.log("Fetcher completed with data:", fetcher.data);
       // Recargar datos después de cualquier acción
-      const loadData = async () => {
-        try {
-          console.log("Reloading data after fetcher action...");
-          const response = await fetch("/api/tasks");
-          if (response.ok) {
-            const serverState = await response.json();
-            serverState.completedTasks = serverState.completedTasks.map(
-              (task: any) => ({
-                ...task,
-                completedAt: new Date(task.completedAt),
-              })
-            );
-            console.log("Data reloaded successfully");
-            setState(serverState);
-          }
-        } catch (error) {
-          console.error("Error reloading data:", error);
-        }
-      };
-      loadData();
+      refetch();
     }
   }, [fetcher.state, fetcher.data]);
 
@@ -68,5 +54,6 @@ export function useTaskData() {
     state,
     loading,
     fetcher,
+    refetch,
   };
 }

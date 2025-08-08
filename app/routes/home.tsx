@@ -3,7 +3,6 @@ import { Link } from "react-router";
 import { useTaskData } from "../hooks/useTaskData";
 import { usePersonStats } from "../hooks/useTaskStats";
 import { Button, DataLayout } from "../components";
-import { ResetButton } from "../components/ResetButton";
 import type { AppState } from "../types/tasks";
 import DropableDemo, {
   DroppableStory,
@@ -108,9 +107,7 @@ function HomeContent({ state }: { state: AppState }) {
             </Button>
           </Link>
 
-          {state.completedTasks.length > 0 && (
-            <ResetButton className="text-red-600 hover:bg-red-50" />
-          )}
+          {/* Reset UI removed; keep npm db:reset for maintenance */}
         </div>
       </div>
     </div>

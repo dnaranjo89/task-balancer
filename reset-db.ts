@@ -1,5 +1,6 @@
 import { createNeonClient, db } from "./app/db";
 import { tasks } from "./app/db/schema";
+import { INITIAL_TASKS } from "./initial-tasks";
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
@@ -91,47 +92,15 @@ async function resetDatabase() {
 
     console.log("📊 Seeding initial data...");
 
-    // Insert initial tasks using Drizzle ORM
-    const initialTasks = [
-      {
-        id: "clean-kitchen",
-        name: "Limpiar la cocina",
-        description: "Lavar platos, limpiar encimeras y barrer",
-        points: 25,
-        category: "limpieza",
-      },
-      {
-        id: "vacuum-house",
-        name: "Aspirar la casa",
-        description: "Aspirar todas las habitaciones",
-        points: 25,
-        category: "limpieza",
-      },
-      {
-        id: "do-laundry",
-        name: "Hacer la colada",
-        description: "Lavar, tender y doblar la ropa",
-        points: 25,
-        category: "limpieza",
-      },
-      {
-        id: "grocery-shopping",
-        name: "Hacer la compra",
-        description: "Comprar comida y productos del hogar",
-        points: 25,
-        category: "recados",
-      },
-      {
-        id: "cook-dinner",
-        name: "Preparar la cena",
-        description: "Cocinar una comida completa",
-        points: 25,
-        category: "cocina",
-      },
-    ];
-
-    for (const task of initialTasks) {
-      await db.insert(tasks).values(task);
+    // Insert initial tasks using the same source as the app
+    for (const task of INITIAL_TASKS) {
+      await db.insert(tasks).values({
+        id: task.id,
+        name: task.name,
+        description: task.description || "",
+        points: task.points,
+        category: task.category || "",
+      });
       console.log(`  - Inserted task: ${task.name}`);
     }
 
@@ -142,7 +111,7 @@ async function resetDatabase() {
     console.log("  - Old migration files cleaned up");
     console.log("  - All old tables dropped");
     console.log("  - Fresh schema created via Drizzle migrations");
-    console.log(`  - ${initialTasks.length} initial tasks seeded`);
+    console.log(`  - ${INITIAL_TASKS.length} initial tasks seeded`);
     console.log("  - Drizzle migrations properly initialized");
     console.log("  - Ready for use!");
   } catch (error) {

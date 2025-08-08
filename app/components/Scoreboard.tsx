@@ -7,7 +7,11 @@ interface ScoreboardProps {
   onExtraPointsUpdate?: () => void;
 }
 
-export function Scoreboard({ people, completedTasks, onExtraPointsUpdate }: ScoreboardProps) {
+export function Scoreboard({
+  people,
+  completedTasks,
+  onExtraPointsUpdate,
+}: ScoreboardProps) {
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat("es-ES", {
       day: "2-digit",
@@ -68,15 +72,20 @@ export function Scoreboard({ people, completedTasks, onExtraPointsUpdate }: Scor
                       +{task.points + task.extraPoints}
                     </div>
                     {task.extraPoints !== 0 && (
-                      <div className={`text-xs ${
-                        task.extraPoints > 0 ? "text-green-600" : "text-red-600"
-                      }`}>
-                        ({task.points} base {task.extraPoints > 0 ? "+" : ""}{task.extraPoints})
+                      <div
+                        className={`text-xs ${
+                          task.extraPoints > 0
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        ({task.points} base {task.extraPoints > 0 ? "+" : ""}
+                        {task.extraPoints})
                       </div>
                     )}
                   </div>
-                  <ExtraPointsControl 
-                    completedTask={task} 
+                  <ExtraPointsControl
+                    completedTask={task}
                     onSuccess={onExtraPointsUpdate}
                   />
                 </div>

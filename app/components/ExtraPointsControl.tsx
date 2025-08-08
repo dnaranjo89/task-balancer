@@ -7,8 +7,13 @@ interface ExtraPointsControlProps {
   onSuccess?: () => void;
 }
 
-export function ExtraPointsControl({ completedTask, onSuccess }: ExtraPointsControlProps) {
-  const [selectedPoints, setSelectedPoints] = useState<number>(completedTask.extraPoints);
+export function ExtraPointsControl({
+  completedTask,
+  onSuccess,
+}: ExtraPointsControlProps) {
+  const [selectedPoints, setSelectedPoints] = useState<number>(
+    completedTask.extraPoints
+  );
   const fetcher = useFetcher();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -25,7 +30,7 @@ export function ExtraPointsControl({ completedTask, onSuccess }: ExtraPointsCont
       },
       { method: "post", action: "/api/extra-points" }
     );
-    
+
     setSelectedPoints(points);
     setIsOpen(false);
     onSuccess?.();
@@ -64,9 +69,7 @@ export function ExtraPointsControl({ completedTask, onSuccess }: ExtraPointsCont
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl p-6 max-w-sm w-full">
-        <h3 className="text-lg font-bold text-gray-800 mb-2">
-          Evaluar tarea
-        </h3>
+        <h3 className="text-lg font-bold text-gray-800 mb-2">Evaluar tarea</h3>
         <p className="text-sm text-gray-600 mb-4">
           ¿Qué tal estuvo <strong>{completedTask.taskName}</strong>?
         </p>

@@ -17,7 +17,10 @@ export async function action({ request }: { request: Request }) {
   // Validar que los puntos extras estén en un rango razonable
   if (extraPoints < -10 || extraPoints > 10) {
     return Response.json(
-      { success: false, error: "Los puntos extras deben estar entre -10 y +10" },
+      {
+        success: false,
+        error: "Los puntos extras deben estar entre -10 y +10",
+      },
       { status: 400 }
     );
   }
@@ -30,11 +33,12 @@ export async function action({ request }: { request: Request }) {
 
     return Response.json({
       success: true,
-      message: extraPoints > 0 
-        ? `+${extraPoints} puntos extras otorgados!` 
-        : extraPoints < 0 
-        ? `${extraPoints} puntos de penalización aplicados` 
-        : "Puntos extras removidos",
+      message:
+        extraPoints > 0
+          ? `+${extraPoints} puntos extras otorgados!`
+          : extraPoints < 0
+            ? `${extraPoints} puntos de penalización aplicados`
+            : "Puntos extras removidos",
     });
   } catch (error) {
     console.error("Error updating extra points:", error);

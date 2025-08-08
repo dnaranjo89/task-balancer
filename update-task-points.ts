@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { eq } from "drizzle-orm";
 import { db } from "./app/db";
 import { tasks } from "./app/db/schema";
-import { TASKS } from "./app/data/tasks";
+import { INITIAL_TASKS } from "./initial-tasks";
 
 // Load environment variables
 dotenv.config();
@@ -10,7 +10,7 @@ dotenv.config();
 async function updateTaskPoints() {
   console.log("Updating task points to 25 for all tasks...");
 
-  for (const task of TASKS) {
+  for (const task of INITIAL_TASKS) {
     try {
       const result = await db
         .update(tasks)

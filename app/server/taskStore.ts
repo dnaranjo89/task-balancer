@@ -8,7 +8,7 @@ import type {
   TaskWithRatings,
   TaskPreference,
 } from "../types/tasks";
-import { PEOPLE, TASKS } from "../data/tasks";
+import { PEOPLE } from "../data/tasks";
 
 // Initialize data on startup
 async function initializeData() {
@@ -16,18 +16,12 @@ async function initializeData() {
     // Check if tasks table is empty and initialize if needed
     const existingTasks = await db.select().from(tasks).limit(1);
     if (existingTasks.length === 0) {
-      await db.insert(tasks).values(
-        TASKS.map((task) => ({
-          id: task.id,
-          name: task.name,
-          description: task.description || "",
-          points: task.points,
-          category: task.category || "",
-        }))
+      console.log(
+        "No tasks found in database. Please run the seed script to initialize tasks."
       );
     }
   } catch (error) {
-    console.error("Error initializing data:", error);
+    console.error("Error checking tasks:", error);
   }
 }
 
@@ -49,7 +43,9 @@ export async function getState(): Promise<AppState> {
   completedTasksData.forEach((task) => {
     peopleMap.set(
       task.personId,
-      (peopleMap.get(task.personId) || 0) + task.points + (task.extraPoints || 0)
+      (peopleMap.get(task.personId) || 0) +
+        task.points +
+        (task.extraPoints || 0)
     );
   });
 

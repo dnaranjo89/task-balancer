@@ -22,7 +22,6 @@ export function CategoryHeader({
   mode,
   onToggleCategorySelection,
 }: CategoryHeaderProps) {
-
   return (
     <div className="flex justify-between items-center mb-4">
       <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">

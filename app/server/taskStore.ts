@@ -1,4 +1,11 @@
-import { db, tasks, taskRatings, taskPreferences, completedTasks, categories } from "../db";
+import {
+  db,
+  tasks,
+  taskRatings,
+  taskPreferences,
+  completedTasks,
+  categories,
+} from "../db";
 import { eq, sql, desc } from "drizzle-orm";
 import type {
   AppState,
@@ -151,13 +158,16 @@ export async function getTasksWithRatings(): Promise<TaskWithRatings[]> {
       const finalPoints = Math.max(1, basePoints + preferencesSum); // Minimum 1 point
 
       // Build category object if it exists
-      const category = task.categoryId && task.categoryName ? {
-        id: task.categoryId,
-        name: task.categoryName,
-        emoji: task.categoryEmoji!,
-        color: task.categoryColor!,
-        createdAt: task.categoryCreatedAt!,
-      } : undefined;
+      const category =
+        task.categoryId && task.categoryName
+          ? {
+              id: task.categoryId,
+              name: task.categoryName,
+              emoji: task.categoryEmoji!,
+              color: task.categoryColor!,
+              createdAt: task.categoryCreatedAt!,
+            }
+          : undefined;
 
       return {
         id: task.id,

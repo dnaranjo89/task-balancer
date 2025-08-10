@@ -29,7 +29,8 @@ export function MultipleTaskSelector({
     return selectableTasks.reduce(
       (acc, task) => {
         // Use category name if available, otherwise fallback to categoryId or "Sin Categoría"
-        const categoryKey = task.category?.name || task.categoryId || "Sin Categoría";
+        const categoryKey =
+          task.category?.name || task.categoryId || "Sin Categoría";
         if (!acc[categoryKey]) {
           acc[categoryKey] = [];
         }
@@ -61,7 +62,8 @@ export function MultipleTaskSelector({
 
     setSelectableTasks((prev) =>
       prev.map((task) => {
-        const taskCategoryKey = task.category?.name || task.categoryId || "Sin Categoría";
+        const taskCategoryKey =
+          task.category?.name || task.categoryId || "Sin Categoría";
         return taskCategoryKey === category
           ? { ...task, selected: !allCategorySelected }
           : task;

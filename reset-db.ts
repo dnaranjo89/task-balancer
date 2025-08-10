@@ -148,7 +148,9 @@ async function resetDatabase() {
         emoji: category.emoji,
         color: category.color,
       });
-      console.log(`    - Inserted category: ${category.name} ${category.emoji}`);
+      console.log(
+        `    - Inserted category: ${category.name} ${category.emoji}`
+      );
     }
 
     // Insert initial tasks using the same source as the app

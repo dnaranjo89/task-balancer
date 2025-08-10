@@ -83,7 +83,16 @@ function HomeContent({ state }: { state: AppState }) {
             </Button>
           </Link> */}
 
-          {/* <DroppableStory containers={["A", "B", "C"]} /> */}
+          <Link to="/scoreboard" className="block">
+            <Button
+              onClick={() => {}}
+              variant="secondary"
+              size="large"
+              className="w-full max-w-md"
+            >
+              📊 Ver Puntuaciones
+            </Button>
+          </Link>
 
           <Link to="/task-preferences" className="block">
             <Button
@@ -96,14 +105,14 @@ function HomeContent({ state }: { state: AppState }) {
             </Button>
           </Link>
 
-          <Link to="/scoreboard" className="block">
+          <Link to="/admin/tasks" className="block">
             <Button
               onClick={() => {}}
               variant="secondary"
               size="large"
               className="w-full max-w-md"
             >
-              📊 Ver Puntuaciones
+              🔧 Admin: Gestionar Tareas
             </Button>
           </Link>
 

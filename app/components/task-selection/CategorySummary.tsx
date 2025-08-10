@@ -21,13 +21,15 @@ export function CategorySummary({ tasksByCategory }: CategorySummaryProps) {
           // Get category data from the first task in the group
           const firstTask = selectedInCategory[0];
           const categoryData = firstTask?.category;
-          
+
           // Fallback to constants if no category data from DB
-          const categoryConfig = categoryData ? {
-            emoji: categoryData.emoji,
-            label: categoryData.name,
-          } : (CATEGORY_CONFIG[category as keyof typeof CATEGORY_CONFIG] || 
-               CATEGORY_CONFIG["sin categoría"]);
+          const categoryConfig = categoryData
+            ? {
+                emoji: categoryData.emoji,
+                label: categoryData.name,
+              }
+            : CATEGORY_CONFIG[category as keyof typeof CATEGORY_CONFIG] ||
+              CATEGORY_CONFIG["sin categoría"];
 
           const categoryPoints = selectedInCategory.reduce(
             (sum, task) => sum + task.finalPoints,

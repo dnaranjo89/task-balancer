@@ -1,13 +1,10 @@
 import { useState, useMemo } from "react";
 import { useFetcher } from "react-router";
-import {
-  ModeToggle,
-  MultipleSelectionControls,
-  TaskCategoryGroup,
-  type SelectableTask,
-  type SelectionMode,
-} from "./task-selection";
-import type { TaskWithRatings } from "../types/tasks";
+import { ModeToggle } from "./ModeToggle";
+import { MultipleSelectionControls } from "./MultipleSelectionControls";
+import { TaskCategoryGroup } from "./TaskCategoryGroup";
+import type { SelectableTask, SelectionMode } from "./types";
+import type { TaskWithRatings } from "../../types/tasks";
 
 interface MultipleTaskSelectorProps {
   tasks: TaskWithRatings[];

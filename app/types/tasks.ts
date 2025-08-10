@@ -1,9 +1,18 @@
+export interface Category {
+  id: string;
+  name: string;
+  emoji: string;
+  color: string;
+  createdAt: Date;
+}
+
 export interface Task {
   id: string;
   name: string;
   description?: string;
   points: number;
-  category?: string;
+  categoryId?: string;
+  category?: Category; // Optional populated category object
 }
 
 export interface TaskRating {

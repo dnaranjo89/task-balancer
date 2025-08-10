@@ -1,4 +1,4 @@
-import { db, tasks, taskRatings, taskPreferences, completedTasks } from "../db";
+import { db, tasks, taskRatings, taskPreferences, completedTasks, categories } from "../db";
 import { eq, sql, desc } from "drizzle-orm";
 import type {
   AppState,
@@ -80,7 +80,21 @@ export async function getState(): Promise<AppState> {
 }
 
 export async function getTasksWithRatings(): Promise<TaskWithRatings[]> {
-  const allTasks = await db.select().from(tasks);
+  // Join tasks with categories
+  const allTasks = await db
+    .select({
+      id: tasks.id,
+      name: tasks.name,
+      description: tasks.description,
+      points: tasks.points,
+      categoryId: tasks.categoryId,
+      categoryName: categories.name,
+      categoryEmoji: categories.emoji,
+      categoryColor: categories.color,
+      categoryCreatedAt: categories.createdAt,
+    })
+    .from(tasks)
+    .leftJoin(categories, eq(tasks.categoryId, categories.id));
 
   const tasksWithRatings = await Promise.all(
     allTasks.map(async (task) => {
@@ -136,11 +150,21 @@ export async function getTasksWithRatings(): Promise<TaskWithRatings[]> {
       );
       const finalPoints = Math.max(1, basePoints + preferencesSum); // Minimum 1 point
 
+      // Build category object if it exists
+      const category = task.categoryId && task.categoryName ? {
+        id: task.categoryId,
+        name: task.categoryName,
+        emoji: task.categoryEmoji!,
+        color: task.categoryColor!,
+        createdAt: task.categoryCreatedAt!,
+      } : undefined;
+
       return {
         id: task.id,
         name: task.name,
         description: task.description || "",
-        category: task.category,
+        categoryId: task.categoryId || undefined,
+        category,
         points: finalPoints,
         ratings: formattedRatings,
         preferences: formattedPreferences,

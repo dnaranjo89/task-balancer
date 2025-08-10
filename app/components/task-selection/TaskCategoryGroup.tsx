@@ -24,9 +24,18 @@ export function TaskCategoryGroup({
   onSubmitSingle,
   isLoading,
 }: TaskCategoryGroupProps) {
-  const categoryConfig =
-    CATEGORY_CONFIG[category as keyof typeof CATEGORY_CONFIG] ||
-    CATEGORY_CONFIG["sin categoría"];
+  // Get category data from the first task in the group (they should all have the same category)
+  const firstTask = categoryTasks[0];
+  const categoryData = firstTask?.category;
+  
+  // Fallback to constants if no category data from DB
+  const categoryConfig = categoryData ? {
+    emoji: categoryData.emoji,
+    label: categoryData.name,
+    color: categoryData.color,
+  } : (CATEGORY_CONFIG[category as keyof typeof CATEGORY_CONFIG] || 
+       CATEGORY_CONFIG["sin categoría"]);
+  
   const selectedInCategory = categoryTasks.filter(
     (task) => task.selected
   ).length;
@@ -36,6 +45,7 @@ export function TaskCategoryGroup({
     <div className={`rounded-xl border-2 p-4 ${categoryConfig.color}`}>
       <CategoryHeader
         category={category}
+        categoryConfig={categoryConfig}
         totalInCategory={totalInCategory}
         selectedInCategory={selectedInCategory}
         mode={mode}

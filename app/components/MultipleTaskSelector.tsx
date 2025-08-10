@@ -28,11 +28,12 @@ export function MultipleTaskSelector({
   const tasksByCategory = useMemo(() => {
     return selectableTasks.reduce(
       (acc, task) => {
-        const category = task.category || "sin categoría";
-        if (!acc[category]) {
-          acc[category] = [];
+        // Use category name if available, otherwise fallback to categoryId or "Sin Categoría"
+        const categoryKey = task.category?.name || task.categoryId || "Sin Categoría";
+        if (!acc[categoryKey]) {
+          acc[categoryKey] = [];
         }
-        acc[category].push(task);
+        acc[categoryKey].push(task);
         return acc;
       },
       {} as Record<string, SelectableTask[]>
@@ -59,12 +60,12 @@ export function MultipleTaskSelector({
     const allCategorySelected = categoryTasks.every((task) => task.selected);
 
     setSelectableTasks((prev) =>
-      prev.map((task) =>
-        task.category === category ||
-        (category === "sin categoría" && !task.category)
+      prev.map((task) => {
+        const taskCategoryKey = task.category?.name || task.categoryId || "Sin Categoría";
+        return taskCategoryKey === category
           ? { ...task, selected: !allCategorySelected }
-          : task
-      )
+          : task;
+      })
     );
   };
 

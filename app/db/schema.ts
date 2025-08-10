@@ -16,13 +16,22 @@ export const completedTasks = pgTable("completed_tasks", {
   extraPoints: integer("extra_points").default(0).notNull(),
 });
 
+// Table for categories
+export const categories = pgTable("categories", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  emoji: text("emoji").notNull(),
+  color: text("color").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // Table for predefined tasks with names, points, description and category
 export const tasks = pgTable("tasks", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
   points: integer("points").notNull(),
-  category: text("category").notNull(),
+  categoryId: text("category_id").references(() => categories.id),
 });
 
 // Table for task ratings
@@ -57,6 +66,8 @@ export const taskPreferences = pgTable(
 
 export type CompletedTask = typeof completedTasks.$inferSelect;
 export type NewCompletedTask = typeof completedTasks.$inferInsert;
+export type Category = typeof categories.$inferSelect;
+export type NewCategory = typeof categories.$inferInsert;
 export type TaskRow = typeof tasks.$inferSelect;
 export type TaskRating = typeof taskRatings.$inferSelect;
 export type NewTaskRating = typeof taskRatings.$inferInsert;

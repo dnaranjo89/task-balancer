@@ -3,6 +3,11 @@ import type { SelectableTask, SelectionMode } from "./types";
 
 interface CategoryHeaderProps {
   category: string;
+  categoryConfig: {
+    emoji: string;
+    label: string;
+    color: string;
+  };
   totalInCategory: number;
   selectedInCategory: number;
   mode: SelectionMode;
@@ -11,14 +16,12 @@ interface CategoryHeaderProps {
 
 export function CategoryHeader({
   category,
+  categoryConfig,
   totalInCategory,
   selectedInCategory,
   mode,
   onToggleCategorySelection,
 }: CategoryHeaderProps) {
-  const categoryConfig =
-    CATEGORY_CONFIG[category as keyof typeof CATEGORY_CONFIG] ||
-    CATEGORY_CONFIG["sin categoría"];
 
   return (
     <div className="flex justify-between items-center mb-4">

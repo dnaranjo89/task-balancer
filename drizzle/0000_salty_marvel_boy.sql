@@ -1,3 +1,11 @@
+CREATE TABLE "categories" (
+	"id" text PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"emoji" text NOT NULL,
+	"color" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "completed_tasks" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"task_id" text NOT NULL,
@@ -31,5 +39,7 @@ CREATE TABLE "tasks" (
 	"name" text NOT NULL,
 	"description" text,
 	"points" integer NOT NULL,
-	"category" text NOT NULL
+	"category_id" text
 );
+--> statement-breakpoint
+ALTER TABLE "tasks" ADD CONSTRAINT "tasks_category_id_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."categories"("id") ON DELETE no action ON UPDATE no action;

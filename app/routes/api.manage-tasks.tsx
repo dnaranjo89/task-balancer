@@ -124,10 +124,10 @@ export async function action({ request }: { request: Request }) {
       // Extract all task updates from form data
       const taskUpdates: any[] = [];
       const taskIds = new Set<string>();
-      
+
       // Parse the nested form data structure
       for (const [key, value] of formData.entries()) {
-        if (key.startsWith('tasks[') && key.includes('][')) {
+        if (key.startsWith("tasks[") && key.includes("][")) {
           const matches = key.match(/tasks\[([^\]]+)\]\[([^\]]+)\]/);
           if (matches) {
             const [, taskId, field] = matches;
@@ -139,9 +139,15 @@ export async function action({ request }: { request: Request }) {
       // Process each task update
       for (const taskId of taskIds) {
         const name = formData.get(`tasks[${taskId}][name]`) as string;
-        const description = formData.get(`tasks[${taskId}][description]`) as string;
-        const points = parseInt(formData.get(`tasks[${taskId}][points]`) as string);
-        const categoryId = formData.get(`tasks[${taskId}][categoryId]`) as string;
+        const description = formData.get(
+          `tasks[${taskId}][description]`
+        ) as string;
+        const points = parseInt(
+          formData.get(`tasks[${taskId}][points]`) as string
+        );
+        const categoryId = formData.get(
+          `tasks[${taskId}][categoryId]`
+        ) as string;
 
         if (name && points) {
           await db

@@ -68,7 +68,9 @@ export async function loader() {
 export default function AdminTasks() {
   const { tasks, categories } = useLoaderData<LoaderData>();
   const [editingTasks, setEditingTasks] = useState<Set<string>>(new Set());
-  const [taskChanges, setTaskChanges] = useState<Record<string, Partial<TaskData>>>({});
+  const [taskChanges, setTaskChanges] = useState<
+    Record<string, Partial<TaskData>>
+  >({});
   const [isCreating, setIsCreating] = useState(false);
   const [newTask, setNewTask] = useState<Partial<TaskData>>({
     id: "",
@@ -104,36 +106,40 @@ export default function AdminTasks() {
   }, [fetcher.data, fetcher.state, showSuccess, showError]);
 
   const startEditing = (taskId: string) => {
-    setEditingTasks(prev => new Set([...prev, taskId]));
+    setEditingTasks((prev) => new Set([...prev, taskId]));
   };
 
   const cancelEditing = (taskId: string) => {
-    setEditingTasks(prev => {
+    setEditingTasks((prev) => {
       const newSet = new Set(prev);
       newSet.delete(taskId);
       return newSet;
     });
-    setTaskChanges(prev => {
+    setTaskChanges((prev) => {
       const newChanges = { ...prev };
       delete newChanges[taskId];
       return newChanges;
     });
   };
 
-  const updateTaskField = (taskId: string, field: keyof TaskData, value: any) => {
-    setTaskChanges(prev => ({
+  const updateTaskField = (
+    taskId: string,
+    field: keyof TaskData,
+    value: any
+  ) => {
+    setTaskChanges((prev) => ({
       ...prev,
       [taskId]: {
         ...prev[taskId],
-        [field]: value
-      }
+        [field]: value,
+      },
     }));
   };
 
   const saveTask = (task: TaskData) => {
     const changes = taskChanges[task.id] || {};
     const updatedTask = { ...task, ...changes };
-    
+
     fetcher.submit(
       {
         action: "update",
@@ -154,7 +160,7 @@ export default function AdminTasks() {
     }
 
     const taskId = newTask.id || generateTaskId(newTask.name);
-    
+
     fetcher.submit(
       {
         action: "create",
@@ -180,15 +186,15 @@ export default function AdminTasks() {
   const generateTaskId = (name: string) => {
     return name
       .toLowerCase()
-      .replace(/[áàäâ]/g, 'a')
-      .replace(/[éèëê]/g, 'e')
-      .replace(/[íìïî]/g, 'i')
-      .replace(/[óòöô]/g, 'o')
-      .replace(/[úùüû]/g, 'u')
-      .replace(/ñ/g, 'n')
-      .replace(/[^a-z0-9]/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
+      .replace(/[áàäâ]/g, "a")
+      .replace(/[éèëê]/g, "e")
+      .replace(/[íìïî]/g, "i")
+      .replace(/[óòöô]/g, "o")
+      .replace(/[úùüû]/g, "u")
+      .replace(/ñ/g, "n")
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
   };
 
   const getTaskValue = (task: TaskData, field: keyof TaskData) => {
@@ -201,10 +207,10 @@ export default function AdminTasks() {
 
     // Save each task individually to ensure proper state management
     Object.entries(taskChanges).forEach(([taskId, changes]) => {
-      const task = tasks.find(t => t.id === taskId);
+      const task = tasks.find((t) => t.id === taskId);
       if (task) {
         const updatedTask = { ...task, ...changes };
-        
+
         fetcher.submit(
           {
             action: "update",
@@ -218,7 +224,7 @@ export default function AdminTasks() {
         );
       }
     });
-    
+
     // Clear all editing state
     setEditingTasks(new Set());
     setTaskChanges({});
@@ -237,9 +243,10 @@ export default function AdminTasks() {
             🔧 Administración de Tareas
           </h1>
           <p className="text-gray-600 mt-2">
-            Haz clic en cualquier campo para editarlo directamente. 
+            Haz clic en cualquier campo para editarlo directamente.
             <span className="text-sm text-gray-500 block mt-1">
-              💡 Enter para guardar, Escape para cancelar, o simplemente haz clic fuera del campo
+              💡 Enter para guardar, Escape para cancelar, o simplemente haz
+              clic fuera del campo
             </span>
           </p>
         </div>
@@ -259,7 +266,8 @@ export default function AdminTasks() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-blue-900">
-                {editingTasks.size} tarea{editingTasks.size > 1 ? 's' : ''} en edición
+                {editingTasks.size} tarea{editingTasks.size > 1 ? "s" : ""} en
+                edición
               </span>
               {Object.keys(taskChanges).length > 0 && (
                 <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
@@ -319,7 +327,12 @@ export default function AdminTasks() {
                         type="text"
                         placeholder="ID (se genera automático)"
                         value={newTask.id || ""}
-                        onChange={(e) => setNewTask(prev => ({ ...prev, id: e.target.value }))}
+                        onChange={(e) =>
+                          setNewTask((prev) => ({
+                            ...prev,
+                            id: e.target.value,
+                          }))
+                        }
                         className="w-full text-xs px-2 py-1 border rounded focus:ring-2 focus:ring-blue-500"
                       />
                       <input
@@ -328,10 +341,10 @@ export default function AdminTasks() {
                         value={newTask.name || ""}
                         onChange={(e) => {
                           const name = e.target.value;
-                          setNewTask(prev => ({ 
-                            ...prev, 
+                          setNewTask((prev) => ({
+                            ...prev,
                             name,
-                            id: prev.id || generateTaskId(name)
+                            id: prev.id || generateTaskId(name),
                           }));
                         }}
                         className="w-full text-sm font-medium px-2 py-1 border rounded focus:ring-2 focus:ring-blue-500"
@@ -342,7 +355,12 @@ export default function AdminTasks() {
                   <td className="px-4 py-3">
                     <select
                       value={newTask.categoryId || ""}
-                      onChange={(e) => setNewTask(prev => ({ ...prev, categoryId: e.target.value || null }))}
+                      onChange={(e) =>
+                        setNewTask((prev) => ({
+                          ...prev,
+                          categoryId: e.target.value || null,
+                        }))
+                      }
                       className="w-full px-2 py-1 border rounded focus:ring-2 focus:ring-blue-500 text-sm"
                     >
                       <option value="">Sin categoría</option>
@@ -357,7 +375,12 @@ export default function AdminTasks() {
                     <input
                       type="number"
                       value={newTask.points || 25}
-                      onChange={(e) => setNewTask(prev => ({ ...prev, points: parseInt(e.target.value) || 25 }))}
+                      onChange={(e) =>
+                        setNewTask((prev) => ({
+                          ...prev,
+                          points: parseInt(e.target.value) || 25,
+                        }))
+                      }
                       min="1"
                       max="100"
                       className="w-20 px-2 py-1 border rounded focus:ring-2 focus:ring-blue-500 text-sm"
@@ -368,7 +391,12 @@ export default function AdminTasks() {
                     <textarea
                       placeholder="Descripción"
                       value={newTask.description || ""}
-                      onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
+                      onChange={(e) =>
+                        setNewTask((prev) => ({
+                          ...prev,
+                          description: e.target.value,
+                        }))
+                      }
                       rows={2}
                       className="w-full px-2 py-1 border rounded focus:ring-2 focus:ring-blue-500 text-sm"
                     />
@@ -397,20 +425,27 @@ export default function AdminTasks() {
               {tasks.map((task) => {
                 const hasChanges = taskChanges[task.id];
                 return (
-                  <tr key={task.id} className={`hover:bg-gray-50 ${hasChanges ? 'bg-yellow-50 border-l-4 border-yellow-400' : ''}`}>
+                  <tr
+                    key={task.id}
+                    className={`hover:bg-gray-50 ${hasChanges ? "bg-yellow-50 border-l-4 border-yellow-400" : ""}`}
+                  >
                     <td className="px-4 py-3">
                       <div className="space-y-2">
-                        <div className="text-xs text-gray-500 font-mono">{task.id}</div>
+                        <div className="text-xs text-gray-500 font-mono">
+                          {task.id}
+                        </div>
                         <input
                           type="text"
-                          value={getTaskValue(task, 'name') as string}
-                          onChange={(e) => updateTaskField(task.id, 'name', e.target.value)}
+                          value={getTaskValue(task, "name") as string}
+                          onChange={(e) =>
+                            updateTaskField(task.id, "name", e.target.value)
+                          }
                           onFocus={() => startEditing(task.id)}
                           onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
+                            if (e.key === "Enter") {
                               e.preventDefault();
                               saveTask(task);
-                            } else if (e.key === 'Escape') {
+                            } else if (e.key === "Escape") {
                               e.preventDefault();
                               cancelEditing(task.id);
                             }
@@ -422,10 +457,16 @@ export default function AdminTasks() {
                     </td>
                     <td className="px-4 py-3">
                       <select
-                        value={getTaskValue(task, 'categoryId') as string || ""}
+                        value={
+                          (getTaskValue(task, "categoryId") as string) || ""
+                        }
                         onChange={(e) => {
                           startEditing(task.id);
-                          updateTaskField(task.id, 'categoryId', e.target.value || null);
+                          updateTaskField(
+                            task.id,
+                            "categoryId",
+                            e.target.value || null
+                          );
                         }}
                         className="w-full px-2 py-1 border-0 border-b border-transparent hover:border-gray-300 focus:border-blue-500 focus:ring-0 bg-transparent focus:bg-white text-sm appearance-none cursor-pointer"
                       >
@@ -440,16 +481,20 @@ export default function AdminTasks() {
                     <td className="px-4 py-3">
                       <input
                         type="number"
-                        value={getTaskValue(task, 'points') as number}
+                        value={getTaskValue(task, "points") as number}
                         onChange={(e) => {
                           startEditing(task.id);
-                          updateTaskField(task.id, 'points', parseInt(e.target.value) || task.points);
+                          updateTaskField(
+                            task.id,
+                            "points",
+                            parseInt(e.target.value) || task.points
+                          );
                         }}
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
+                          if (e.key === "Enter") {
                             e.preventDefault();
                             saveTask(task);
-                          } else if (e.key === 'Escape') {
+                          } else if (e.key === "Escape") {
                             e.preventDefault();
                             cancelEditing(task.id);
                           }
@@ -462,10 +507,16 @@ export default function AdminTasks() {
                     </td>
                     <td className="px-4 py-3">
                       <textarea
-                        value={getTaskValue(task, 'description') as string || ""}
+                        value={
+                          (getTaskValue(task, "description") as string) || ""
+                        }
                         onChange={(e) => {
                           startEditing(task.id);
-                          updateTaskField(task.id, 'description', e.target.value);
+                          updateTaskField(
+                            task.id,
+                            "description",
+                            e.target.value
+                          );
                         }}
                         rows={2}
                         className="w-full px-2 py-1 border-0 border-b border-transparent hover:border-gray-300 focus:border-blue-500 focus:ring-0 bg-transparent focus:bg-white text-sm resize-none"
@@ -515,21 +566,26 @@ export default function AdminTasks() {
       {tasks.length === 0 && (
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg">No hay tareas configuradas</p>
-          <Button onClick={() => setIsCreating(true)} variant="primary" className="mt-4">
+          <Button
+            onClick={() => setIsCreating(true)}
+            variant="primary"
+            className="mt-4"
+          >
             Crear primera tarea
           </Button>
         </div>
       )}
 
       <div className="mt-8 text-sm text-gray-600">
-        <p><strong>Total de tareas:</strong> {tasks.length}</p>
-        <p><strong>Categorías disponibles:</strong> {categories.length}</p>
+        <p>
+          <strong>Total de tareas:</strong> {tasks.length}
+        </p>
+        <p>
+          <strong>Categorías disponibles:</strong> {categories.length}
+        </p>
       </div>
 
-      <ToastContainer
-        toasts={toasts}
-        onRemoveToast={removeToast}
-      />
+      <ToastContainer toasts={toasts} onRemoveToast={removeToast} />
     </div>
   );
 }

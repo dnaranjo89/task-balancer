@@ -21,6 +21,25 @@ export async function action({ request }: { request: Request }) {
     return redirect("/");
   }
 
+  if (action === "complete-multiple") {
+    const personName = formData.get("personName") as string;
+    const tasksData = formData.get("tasks") as string;
+
+    if (!tasksData) {
+      return Response.json({ error: "No tasks provided" }, { status: 400 });
+    }
+
+    const tasks = JSON.parse(tasksData);
+
+    // Completar todas las tareas
+    for (const task of tasks) {
+      await completeTask(personName, task.id, task.name, task.points);
+    }
+
+    // Redirigir al home después de completar las tareas
+    return redirect("/");
+  }
+
   if (action === "reset") {
     await resetData();
     // Redirigir al home después de resetear (o quedarse en la misma página)

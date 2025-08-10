@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFetcher } from "react-router";
 import type { CompletedTask } from "../types/tasks";
 
@@ -17,6 +17,13 @@ export function ExtraPointsControl({
   const fetcher = useFetcher();
   const [isOpen, setIsOpen] = useState(false);
 
+  // Watch for successful completion and call onSuccess
+  useEffect(() => {
+    if (fetcher.state === "idle" && fetcher.data?.success) {
+      onSuccess?.();
+    }
+  }, [fetcher.state, fetcher.data, onSuccess]);
+
   const handleSubmit = (points: number) => {
     if (points === completedTask.extraPoints) {
       setIsOpen(false);
@@ -33,7 +40,6 @@ export function ExtraPointsControl({
 
     setSelectedPoints(points);
     setIsOpen(false);
-    onSuccess?.();
   };
 
   const pointOptions = [
@@ -52,7 +58,7 @@ export function ExtraPointsControl({
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className={`text-xs px-2 py-1 rounded-full transition-colors cursor-pointer ${
+        className={`text-sm px-3 py-2 rounded-lg transition-colors cursor-pointer ${
           completedTask.extraPoints !== 0
             ? completedTask.extraPoints > 0
               ? "bg-green-100 text-green-700 hover:bg-green-200"

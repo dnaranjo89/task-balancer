@@ -12,4 +12,5 @@ export default [
   route("/api/task-preferences", "routes/api.task-preferences.tsx"),
   route("/api/extra-points", "routes/api.extra-points.tsx"),
   route("/api/manage-tasks", "routes/api.manage-tasks.tsx"),
+  route("/api/delete-completed-task", "routes/api.delete-completed-task.tsx"),
 ] satisfies RouteConfig;

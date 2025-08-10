@@ -1,6 +1,11 @@
 import type { Route } from "./+types/task-selection";
 import { Link } from "react-router";
-import { Button, LoadingState, ErrorState, TaskButton } from "../components";
+import {
+  Button,
+  LoadingState,
+  ErrorState,
+  MultipleTaskSelector,
+} from "../components";
 import { useTaskData } from "../hooks/useTaskData";
 
 export function meta({ params }: Route.MetaArgs) {
@@ -10,7 +15,7 @@ export function meta({ params }: Route.MetaArgs) {
     { title: `Tareas para ${personName} - Task Balancer` },
     {
       name: "description",
-      content: `Selecciona una tarea para ${personName}`,
+      content: `Selecciona una o múltiples tareas para ${personName}`,
     },
   ];
 }
@@ -57,11 +62,10 @@ export default function TaskSelection({ params }: Route.ComponentProps) {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {state?.tasks.map((task) => (
-            <TaskButton key={task.id} task={task} personName={personName} />
-          ))}
-        </div>
+        <MultipleTaskSelector
+          tasks={state?.tasks || []}
+          personName={personName}
+        />
       </div>
     </div>
   );

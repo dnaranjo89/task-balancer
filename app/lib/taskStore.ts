@@ -1,5 +1,10 @@
 import { db } from "../db";
-import { completedTasks, tasks, taskRatings } from "../db/schema";
+import {
+  completedTasks,
+  tasks,
+  taskRatings,
+  taskPreferences,
+} from "../db/schema";
 import { eq, and } from "drizzle-orm";
 import type {
   AppState,
@@ -7,6 +12,7 @@ import type {
   Person,
   TaskWithRatings,
   TaskRating,
+  TaskPreference,
 } from "../types/tasks";
 
 // Hard-coded people list (could be moved to env variables or DB in the future)
@@ -43,6 +49,7 @@ export async function getState(): Promise<AppState> {
       taskName:
         allTasks.find((t) => t.id === task.taskId)?.name || "Unknown Task",
       points: task.points,
+      extraPoints: task.extraPoints,
       completedAt: task.completedAt,
     })),
     tasks: allTasks,
@@ -61,6 +68,11 @@ export async function getTasksWithRatings(): Promise<TaskWithRatings[]> {
       .from(taskRatings)
       .where(eq(taskRatings.taskId, task.id));
 
+    const preferences = await db
+      .select()
+      .from(taskPreferences)
+      .where(eq(taskPreferences.taskId, task.id));
+
     const taskRatingsFormatted: TaskRating[] = ratings.map((rating) => ({
       id: rating.id.toString(),
       taskId: rating.taskId,
@@ -69,8 +81,19 @@ export async function getTasksWithRatings(): Promise<TaskWithRatings[]> {
       createdAt: rating.createdAt,
     }));
 
-    // Calculate average points
-    const averagePoints =
+    const taskPreferencesFormatted: TaskPreference[] = preferences.map(
+      (pref) => ({
+        id: pref.id.toString(),
+        taskId: pref.taskId,
+        personName: pref.personName,
+        preference: pref.preference as any,
+        pointsModifier: pref.pointsModifier,
+        createdAt: pref.createdAt,
+      })
+    );
+
+    // Calculate base points (average of ratings or default task points)
+    const basePoints =
       taskRatingsFormatted.length > 0
         ? Math.round(
             taskRatingsFormatted.reduce(
@@ -80,6 +103,16 @@ export async function getTasksWithRatings(): Promise<TaskWithRatings[]> {
           )
         : task.points;
 
+    // Calculate final points (base points + preferences modifiers)
+    const preferencesSum = taskPreferencesFormatted.reduce(
+      (sum, pref) => sum + pref.pointsModifier,
+      0
+    );
+    const finalPoints = basePoints + preferencesSum;
+
+    // Calculate average points (for backward compatibility)
+    const averagePoints = basePoints;
+
     tasksWithRatings.push({
       id: task.id,
       name: task.name,
@@ -87,6 +120,9 @@ export async function getTasksWithRatings(): Promise<TaskWithRatings[]> {
       points: task.points,
       category: task.category,
       ratings: taskRatingsFormatted,
+      preferences: taskPreferencesFormatted,
+      basePoints,
+      finalPoints,
       averagePoints,
     });
   }
@@ -115,6 +151,7 @@ export async function completeTask(
     personName: newTask[0].personId,
     taskName,
     points: newTask[0].points,
+    extraPoints: newTask[0].extraPoints,
     completedAt: newTask[0].completedAt,
   };
 }

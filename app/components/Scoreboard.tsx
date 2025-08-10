@@ -1,5 +1,6 @@
 import type { Person, CompletedTask } from "../types/tasks";
 import { ExtraPointsControl } from "./ExtraPointsControl";
+import { DeleteCompletedTaskButton } from "./DeleteCompletedTaskButton";
 
 interface ScoreboardProps {
   people: Person[];
@@ -66,7 +67,7 @@ export function Scoreboard({
                     {task.personName} • {formatDate(task.completedAt)}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <div className="text-right">
                     <div className="text-green-600 font-bold">
                       +{task.points + task.extraPoints}
@@ -84,10 +85,16 @@ export function Scoreboard({
                       </div>
                     )}
                   </div>
-                  <ExtraPointsControl
-                    completedTask={task}
-                    onSuccess={onExtraPointsUpdate}
-                  />
+                  <div className="flex flex-col gap-1">
+                    <ExtraPointsControl
+                      completedTask={task}
+                      onSuccess={onExtraPointsUpdate}
+                    />
+                    <DeleteCompletedTaskButton
+                      completedTask={task}
+                      onSuccess={onExtraPointsUpdate}
+                    />
+                  </div>
                 </div>
               </div>
             ))}

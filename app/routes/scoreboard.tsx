@@ -34,13 +34,20 @@ export default function ScoreboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">Puntuaciones</h1>
-          <Link to="/">
-            <Button onClick={() => {}} variant="secondary">
-              ← Volver
-            </Button>
-          </Link>
+        <div className="mb-6">
+          {/* Title */}
+          <div className="mb-4">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Puntuaciones</h1>
+          </div>
+          
+          {/* Back button */}
+          <div className="flex justify-center sm:justify-end">
+            <Link to="/">
+              <Button onClick={() => {}} variant="secondary" className="w-full sm:w-auto">
+                ← Volver
+              </Button>
+            </Link>
+          </div>
         </div>
         <Scoreboard
           people={state.people}

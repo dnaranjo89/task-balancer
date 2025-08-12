@@ -218,15 +218,22 @@ export default function TaskPreferences() {
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 p-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-800">
-              ¿Qué tan difícil te resulta cada tarea?
-            </h1>
-            <Link to="/">
-              <Button onClick={() => {}} variant="secondary">
-                ← Volver al inicio
-              </Button>
-            </Link>
+          <div className="mb-6">
+            {/* Title */}
+            <div className="mb-4">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+                ¿Qué tan difícil te resulta cada tarea?
+              </h1>
+            </div>
+            
+            {/* Back button */}
+            <div className="flex justify-center sm:justify-end">
+              <Link to="/">
+                <Button onClick={() => {}} variant="secondary" className="w-full sm:w-auto">
+                  ← Volver al inicio
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* Person Selection */}

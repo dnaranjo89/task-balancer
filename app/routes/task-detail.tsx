@@ -79,13 +79,19 @@ export default function TaskDetail({ params }: Route.ComponentProps) {
         <div className="mb-6">
           {/* Title */}
           <div className="mb-4">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">{task.name}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+              {task.name}
+            </h1>
           </div>
-          
+
           {/* Back button */}
           <div className="flex justify-center sm:justify-end">
             <Link to="/tasks">
-              <Button onClick={() => {}} variant="secondary" className="w-full sm:w-auto">
+              <Button
+                onClick={() => {}}
+                variant="secondary"
+                className="w-full sm:w-auto"
+              >
                 ← Volver a la lista
               </Button>
             </Link>

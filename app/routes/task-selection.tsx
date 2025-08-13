@@ -58,11 +58,15 @@ export default function TaskSelection({ params }: Route.ComponentProps) {
               Tareas para {personName}
             </h1>
           </div>
-          
+
           {/* Back button */}
           <div className="flex justify-center sm:justify-end">
             <Link to="/">
-              <Button onClick={() => {}} variant="secondary" className="w-full sm:w-auto">
+              <Button
+                onClick={() => {}}
+                variant="secondary"
+                className="w-full sm:w-auto"
+              >
                 ← Volver
               </Button>
             </Link>

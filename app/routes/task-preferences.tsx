@@ -225,11 +225,15 @@ export default function TaskPreferences() {
                 ¿Qué tan difícil te resulta cada tarea?
               </h1>
             </div>
-            
+
             {/* Back button */}
             <div className="flex justify-center sm:justify-end">
               <Link to="/">
-                <Button onClick={() => {}} variant="secondary" className="w-full sm:w-auto">
+                <Button
+                  onClick={() => {}}
+                  variant="secondary"
+                  className="w-full sm:w-auto"
+                >
                   ← Volver al inicio
                 </Button>
               </Link>

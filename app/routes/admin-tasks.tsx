@@ -251,17 +251,17 @@ export default function AdminTasks() {
             </span>
           </p>
         </div>
-        
+
         {/* Buttons - stacked on mobile */}
         <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4 sm:justify-end">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="text-center sm:text-left px-4 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
           >
             ← Volver al inicio
           </Link>
-          <Button 
-            onClick={() => setIsCreating(!isCreating)} 
+          <Button
+            onClick={() => setIsCreating(!isCreating)}
             variant="primary"
             className="w-full sm:w-auto"
           >
